@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:padding="16dp"
+	android:animateLayoutChanges="true">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="8dp"
+		android:text="@string/configure"/>
+
+	<EditText
+		android:id="@+id/appwidget_card_serial"
+		android:hint="@string/card_serial_hint"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:focusable="true"
+		android:textSize="20sp"
+		android:maxLength="10"
+		android:inputType="number"/>
+
+	<TextView
+		android:id="@+id/please_enter_10_digits"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/please_enter_10_digits"
+		android:textSize="12sp"
+		android:textColor="@color/colorAccent"/>
+
+	<EditText
+		android:id="@+id/appwidget_pan_4_digits"
+		android:hint="@string/pan_4_digits_hint"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:focusable="true"
+		android:textSize="20sp"
+		android:maxLength="4"
+		android:inputType="number"/>
+
+	<TextView
+		android:id="@+id/please_enter_4_digits"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/please_enter_4_digits"
+		android:textSize="12sp"
+		android:textColor="@color/colorAccent"/>
+
+	<Button
+		android:id="@+id/save_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:focusable="true"
+		android:text="@string/save_widget"
+		android:enabled="false"/>
+
+</LinearLayout>

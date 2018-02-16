@@ -1,0 +1,11 @@
+<resources>
+	<string name="app_name">Balance Widget TR</string>
+	<string name="widget_text_loading">&#8230; &#8364;</string>
+	<string name="configure">Configure</string>
+	<string name="save_widget">Save widget</string>
+	<string name="card_serial_hint">Serial number of the card</string>
+	<string name="please_enter_10_digits">Please enter 10 digits</string>
+	<string name="pan_4_digits_hint">The last four digits of the card</string>
+	<string name="please_enter_4_digits">Please enter 4 digits</string>
+	<string name="wrong_result">Wrong card serial or wrong number!</string>
+</resources>

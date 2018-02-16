@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:configure="sk.hidasi.balance_tr.BalanceWidgetConfigureActivity"
+                    android:initialLayout="@layout/balance_widget"
+                    android:minHeight="40dp"
+                    android:minWidth="40dp"
+                    android:previewImage="@drawable/karta_edenred_preview"
+                    android:resizeMode="none"
+                    android:updatePeriodMillis="600000">
+</appwidget-provider>
