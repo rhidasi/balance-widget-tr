@@ -2,13 +2,10 @@ package sk.hidasi.balance_tr;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,12 +19,6 @@ import butterknife.OnClick;
  * The configuration screen for the {@link BalanceWidget BalanceWidget} AppWidget.
  */
 public class BalanceWidgetConfigureActivity extends Activity implements TextWatcher {
-
-	private static final String TAG = BalanceWidgetConfigureActivity.class.getSimpleName();
-	private static final String PREFS_NAME = "sk.hidasi.balance_tr.BalanceWidget";
-	private static final String PREF_PREFIX_TEXT = "appwidget_text_";
-	private static final String PREF_PREFIX_SERIAL = "appwidget_serial_";
-	private static final String PREF_PREFIX_FOUR_DIGITS = "appwidget_four_digits_";
 
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
@@ -47,11 +38,11 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 		// When the button is clicked, store the string locally
 		String serial = mSerialNumber.getText().toString();
 		String fourDigits = mFourDigits.getText().toString();
-		saveWidgetPrefs(this, mAppWidgetId, serial, fourDigits);
+		BalanceWidgetHelper.saveWidgetPrefs(this, mAppWidgetId, serial, fourDigits);
 
 		// It is the responsibility of the configuration activity to update the app widget
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-		BalanceWidget.updateAppWidget(this, appWidgetManager, mAppWidgetId, true);
+		BalanceWidgetHelper.createHttpRequest(this, appWidgetManager, mAppWidgetId);
 
 		// Make sure we pass back the original appWidgetId
 		Intent resultValue = new Intent();
@@ -62,44 +53,6 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 
 	public BalanceWidgetConfigureActivity() {
 		super();
-	}
-
-	static String loadWidgetSerial(Context context, int appWidgetId) {
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-		return  prefs.getString(PREF_PREFIX_SERIAL + appWidgetId, null);
-	}
-
-	static String loadWidgetFourDigits(Context context, int appWidgetId) {
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-		return  prefs.getString(PREF_PREFIX_FOUR_DIGITS + appWidgetId, null);
-	}
-
-	static String loadWidgetText(Context context, int appWidgetId) {
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-		return  prefs.getString(PREF_PREFIX_TEXT + appWidgetId, null);
-	}
-
-	static void saveWidgetText(Context context, int appWidgetId, String result) {
-		Log.d(TAG, "saveWidgetText(), appWidgetId=" + appWidgetId);
-		SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-		prefs.putString(PREF_PREFIX_TEXT + appWidgetId, result);
-		prefs.apply();
-	}
-
-	static void saveWidgetPrefs(Context context, int appWidgetId, String serial, String fourDigits) {
-		Log.d(TAG, "saveWidgetPrefs(), appWidgetId=" + appWidgetId);
-		SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-		prefs.putString(PREF_PREFIX_SERIAL + appWidgetId, serial);
-		prefs.putString(PREF_PREFIX_FOUR_DIGITS + appWidgetId, fourDigits);
-		prefs.apply();
-	}
-
-	static void deleteWidgetPrefs(Context context, int appWidgetId) {
-		SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-		prefs.remove(PREF_PREFIX_TEXT + appWidgetId);
-		prefs.remove(PREF_PREFIX_SERIAL + appWidgetId);
-		prefs.remove(PREF_PREFIX_FOUR_DIGITS + appWidgetId);
-		prefs.apply();
 	}
 
 	@Override
@@ -127,8 +80,8 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 			finish();
 		}
 
-		mSerialNumber.setText(loadWidgetSerial(this, mAppWidgetId));
-		mFourDigits.setText(loadWidgetFourDigits(this, mAppWidgetId));
+		mSerialNumber.setText(BalanceWidgetHelper.loadWidgetSerial(this, mAppWidgetId));
+		mFourDigits.setText(BalanceWidgetHelper.loadWidgetFourDigits(this, mAppWidgetId));
 	}
 
 	@Override
