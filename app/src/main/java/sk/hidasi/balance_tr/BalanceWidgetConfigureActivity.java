@@ -1,14 +1,13 @@
 package sk.hidasi.balance_tr;
 
-import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -19,19 +18,15 @@ import butterknife.OnClick;
 /**
  * The configuration screen for the {@link BalanceWidget BalanceWidget} AppWidget.
  */
-public class BalanceWidgetConfigureActivity extends Activity implements TextWatcher, SeekBar.OnSeekBarChangeListener {
+public class BalanceWidgetConfigureActivity extends AppCompatActivity implements TextWatcher, SeekBar.OnSeekBarChangeListener {
 
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 	private static final int mUpdateMinutes[] = {1, 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440};
 
 	@BindView(R.id.appwidget_card_serial)
-	EditText mSerialNumber;
+	TextInputLayout mSerialNumber;
 	@BindView(R.id.appwidget_pan_4_digits)
-	EditText mFourDigits;
-	@BindView(R.id.please_enter_10_digits)
-	TextView mEnter10Digits;
-	@BindView(R.id.please_enter_4_digits)
-	TextView mEnter4Digits;
+	TextInputLayout mFourDigits;
 	@BindView(R.id.update_duration_seekbar)
 	SeekBar mDurationSeekBar;
 	@BindView(R.id.update_duration_text)
@@ -42,8 +37,8 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 	@OnClick(R.id.save_button)
 	public void saveButton() {
 		// When the button is clicked, store the string locally
-		final String serial = mSerialNumber.getText().toString();
-		final String fourDigits = mFourDigits.getText().toString();
+		final String serial = mSerialNumber.getEditText().getText().toString();
+		final String fourDigits = mFourDigits.getEditText().getText().toString();
 		final int updateDuration = progressToMinutes(mDurationSeekBar.getProgress());
 		BalanceWidgetHelper.saveWidgetPrefs(this, mAppWidgetId, serial, fourDigits, updateDuration);
 
@@ -73,8 +68,8 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 		setContentView(R.layout.balance_widget_configure);
 		ButterKnife.bind(this);
 
-		mSerialNumber.addTextChangedListener(this);
-		mFourDigits.addTextChangedListener(this);
+		mSerialNumber.getEditText().addTextChangedListener(this);
+		mFourDigits.getEditText().addTextChangedListener(this);
 		mDurationSeekBar.setOnSeekBarChangeListener(this);
 
 		// Find the widget id from the intent.
@@ -88,8 +83,8 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 			finish();
 		}
 
-		mSerialNumber.setText(BalanceWidgetHelper.loadWidgetSerial(this, mAppWidgetId));
-		mFourDigits.setText(BalanceWidgetHelper.loadWidgetFourDigits(this, mAppWidgetId));
+		mSerialNumber.getEditText().setText(BalanceWidgetHelper.loadWidgetSerial(this, mAppWidgetId));
+		mFourDigits.getEditText().setText(BalanceWidgetHelper.loadWidgetFourDigits(this, mAppWidgetId));
 		final int minutes = BalanceWidgetHelper.loadWidgetUpdateMinutes(this, mAppWidgetId);
 		mDurationSeekBar.setProgress(minutesToProgress(minutes));
 	}
@@ -104,10 +99,18 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 
 	@Override
 	public void afterTextChanged(Editable editable) {
-		final boolean serialOk = mSerialNumber.length() == 10;
-		final boolean fourOk = mFourDigits.length() == 4;
-		mEnter10Digits.setVisibility(serialOk ? View.GONE : View.VISIBLE);
-		mEnter4Digits.setVisibility(fourOk ? View.GONE : View.VISIBLE);
+		final boolean serialOk = mSerialNumber.getEditText().length() == 10;
+		final boolean fourOk = mFourDigits.getEditText().length() == 4;
+		if (serialOk) {
+			mSerialNumber.setErrorEnabled(false);
+		} else {
+			mSerialNumber.setError(getString(R.string.please_enter_10_digits));
+		}
+		if (fourOk) {
+			mFourDigits.setErrorEnabled(false);
+		} else {
+			mFourDigits.setError(getString(R.string.please_enter_4_digits));
+		}
 		mAddButton.setEnabled(serialOk && fourOk);
 		if (serialOk && !fourOk) {
 			mFourDigits.requestFocus();
@@ -119,8 +122,14 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+		String text;
 		final int minutes = progressToMinutes(i);
-		final String text = minutes < 60 ? getString(R.string.update_minutes, minutes) : getString(R.string.update_hours, minutes / 60);
+		if (minutes < 60) {
+			text = getResources().getQuantityString(R.plurals.update_minutes, minutes, minutes);
+		} else {
+			final int hours = minutes / 60;
+			text = getResources().getQuantityString(R.plurals.update_hours, hours, hours);
+		}
 		mDurationText.setText(text);
 	}
 

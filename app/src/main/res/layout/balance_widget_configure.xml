@@ -3,78 +3,62 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:animateLayoutChanges="true"
 	android:orientation="vertical"
-	android:padding="16dp"
-	android:animateLayoutChanges="true">
+	android:padding="16dp">
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="8dp"
-		android:text="@string/configure"/>
-
-	<EditText
+	<android.support.design.widget.TextInputLayout
 		android:id="@+id/appwidget_card_serial"
-		android:hint="@string/card_serial_hint"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
-		android:focusable="true"
-		android:textSize="20sp"
-		android:maxLength="10"
-		android:inputType="number"/>
+		android:animateLayoutChanges="true"
+		android:layout_marginTop="8dp">
+		<android.support.design.widget.TextInputEditText
+			android:hint="@string/card_serial_hint"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textSize="20sp"
+			android:maxLength="10"
+			android:inputType="number"/>
+	</android.support.design.widget.TextInputLayout>
 
-	<TextView
-		android:id="@+id/please_enter_10_digits"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/please_enter_10_digits"
-		android:textSize="12sp"
-		android:textColor="@color/colorAccent"/>
-
-	<EditText
+	<android.support.design.widget.TextInputLayout
 		android:id="@+id/appwidget_pan_4_digits"
-		android:hint="@string/pan_4_digits_hint"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
-		android:focusable="true"
-		android:textSize="20sp"
-		android:maxLength="4"
-		android:inputType="number"/>
-
-	<TextView
-		android:id="@+id/please_enter_4_digits"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/please_enter_4_digits"
-		android:textSize="12sp"
-		android:textColor="@color/colorAccent"/>
-
-	<SeekBar
-		android:id="@+id/update_duration_seekbar"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
-		android:min="0"
-		android:max="11"
-		android:progress="3"/>
+		android:animateLayoutChanges="true"
+		android:layout_marginTop="8dp">
+		<android.support.design.widget.TextInputEditText
+			android:hint="@string/pan_4_digits_hint"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textSize="20sp"
+			android:maxLength="4"
+			android:inputType="number"/>
+	</android.support.design.widget.TextInputLayout>
 
 	<TextView
 		android:id="@+id/update_duration_text"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/update_minutes"
-		android:textSize="12sp"
-		android:textColor="@color/colorAccent"/>
+		android:layout_marginTop="8dp"
+		android:textSize="16sp"/>
+
+	<SeekBar
+		style="@style/Widget.AppCompat.SeekBar.Discrete"
+		android:id="@+id/update_duration_seekbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:max="11"
+		android:progress="3"/>
 
 	<Button
 		android:id="@+id/save_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="8dp"
-		android:focusable="true"
 		android:text="@string/save_widget"
+		android:textSize="16sp"
 		android:enabled="false"/>
 
 </LinearLayout>

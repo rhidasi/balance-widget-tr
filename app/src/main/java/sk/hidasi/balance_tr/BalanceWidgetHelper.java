@@ -50,9 +50,12 @@ public class BalanceWidgetHelper {
 				.build();
 		OkHttpClient client = new OkHttpClient();
 		client.newCall(request).enqueue(new Callback() {
+
 			@Override
 			public void onFailure(final Call call, IOException e) {
 				Log.d(TAG, "Request failed");
+				// shedule next update
+				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId);
 			}
 
 			@Override
