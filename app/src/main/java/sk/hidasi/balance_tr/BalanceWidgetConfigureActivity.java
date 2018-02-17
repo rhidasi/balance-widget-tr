@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -18,9 +19,10 @@ import butterknife.OnClick;
 /**
  * The configuration screen for the {@link BalanceWidget BalanceWidget} AppWidget.
  */
-public class BalanceWidgetConfigureActivity extends Activity implements TextWatcher {
+public class BalanceWidgetConfigureActivity extends Activity implements TextWatcher, SeekBar.OnSeekBarChangeListener {
 
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+	private static final int mUpdateMinutes[] = {1, 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440};
 
 	@BindView(R.id.appwidget_card_serial)
 	EditText mSerialNumber;
@@ -30,15 +32,20 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 	TextView mEnter10Digits;
 	@BindView(R.id.please_enter_4_digits)
 	TextView mEnter4Digits;
+	@BindView(R.id.update_duration_seekbar)
+	SeekBar mDurationSeekBar;
+	@BindView(R.id.update_duration_text)
+	TextView mDurationText;
 	@BindView(R.id.save_button)
 	Button mAddButton;
 
 	@OnClick(R.id.save_button)
 	public void saveButton() {
 		// When the button is clicked, store the string locally
-		String serial = mSerialNumber.getText().toString();
-		String fourDigits = mFourDigits.getText().toString();
-		BalanceWidgetHelper.saveWidgetPrefs(this, mAppWidgetId, serial, fourDigits);
+		final String serial = mSerialNumber.getText().toString();
+		final String fourDigits = mFourDigits.getText().toString();
+		final int updateDuration = progressToMinutes(mDurationSeekBar.getProgress());
+		BalanceWidgetHelper.saveWidgetPrefs(this, mAppWidgetId, serial, fourDigits, updateDuration);
 
 		// It is the responsibility of the configuration activity to update the app widget
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -68,6 +75,7 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 
 		mSerialNumber.addTextChangedListener(this);
 		mFourDigits.addTextChangedListener(this);
+		mDurationSeekBar.setOnSeekBarChangeListener(this);
 
 		// Find the widget id from the intent.
 		Bundle extras = getIntent().getExtras();
@@ -82,6 +90,8 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 
 		mSerialNumber.setText(BalanceWidgetHelper.loadWidgetSerial(this, mAppWidgetId));
 		mFourDigits.setText(BalanceWidgetHelper.loadWidgetFourDigits(this, mAppWidgetId));
+		final int minutes = BalanceWidgetHelper.loadWidgetUpdateMinutes(this, mAppWidgetId);
+		mDurationSeekBar.setProgress(minutesToProgress(minutes));
 	}
 
 	@Override
@@ -105,5 +115,30 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 		if (fourOk && !serialOk) {
 			mSerialNumber.requestFocus();
 		}
+	}
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+		final int minutes = progressToMinutes(i);
+		final String text = minutes < 60 ? getString(R.string.update_minutes, minutes) : getString(R.string.update_hours, minutes / 60);
+		mDurationText.setText(text);
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+	}
+
+	private int progressToMinutes(final int progress) {
+		return mUpdateMinutes[progress];
+	}
+
+	private int minutesToProgress(final int minutes) {
+		int index = 0;
+		while (index < mUpdateMinutes.length && mUpdateMinutes[index] < minutes) index++;
+		return index;
 	}
 }

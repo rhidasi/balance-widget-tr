@@ -34,7 +34,7 @@ public class BalanceWidget extends AppWidgetProvider {
 			intent.putExtra(WIDGET_ID, appWidgetId);
 			final PendingIntent pending = PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			views.setOnClickPendingIntent(R.id.widget_layout, pending);
-			final long interval = 15 * 60 * 1000; // 15 minutes
+			final long interval = 1000 * 60 * BalanceWidgetHelper.loadWidgetUpdateMinutes(context, appWidgetId);
 			alarm.cancel(pending);
 			alarm.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + interval, pending);
 		}
