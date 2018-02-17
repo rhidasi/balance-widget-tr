@@ -58,7 +58,7 @@ public class BalanceWidgetConfigureActivity extends Activity implements TextWatc
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
 		setResult(RESULT_OK, resultValue);
 		finish();
-	};
+	}
 
 	public BalanceWidgetConfigureActivity() {
 		super();

@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -13,13 +12,14 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Implementation of App Widget functionality.
@@ -32,66 +32,7 @@ public class BalanceWidget extends AppWidgetProvider {
 	private static final String ACTION_WIDGET_SETTINGS = "sk.hidasi.action_widget_settings";
 	private static final String WIDGET_ID = "widget_id";
 
-	private static class GetUrlContentTask extends AsyncTask<String, Integer, String> {
-
-		private final Context mContext;
-		private final int mAppWidgetId;
-
-		private GetUrlContentTask(final Context context, final int appWidgetId) {
-			mContext = context;
-			mAppWidgetId = appWidgetId;
-		}
-
-		protected String doInBackground(String... urls) {
-			Log.d(TAG, "Sending request...");
-			String content = "";
-			try {
-				final URL url = new URL(urls[0]);
-				final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				connection.setRequestMethod("GET");
-				connection.setDoOutput(true);
-				connection.setConnectTimeout(5000);
-				connection.setReadTimeout(5000);
-				connection.connect();
-				final BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String line;
-				while ((line = rd.readLine()) != null) {
-					content += line + "\n";
-				}
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (ProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			Log.d(TAG, "GET request = " + content);
-			return content;
-		}
-
-		protected void onProgressUpdate(Integer... progress) {
-		}
-
-		protected void onPostExecute(String result) {
-			if (!result.isEmpty()) {
-				String text = mContext.getString(R.string.widget_text_loading);
-				try {
-					final JSONObject json = new JSONObject(result);
-					final boolean resultOk = json.getBoolean("result");
-					if (resultOk) {
-						text = json.getString("balance") + "€";
-					} else {
-						Toast.makeText(mContext, R.string.wrong_result, Toast.LENGTH_SHORT).show();
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				BalanceWidgetConfigureActivity.saveWidgetText(mContext, mAppWidgetId, text);
-				AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
-				BalanceWidget.updateAppWidget(mContext, appWidgetManager, mAppWidgetId, false);
-			}
-		}
-	}
+	private static final OkHttpClient mHttpClient = new OkHttpClient();
 
 	static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
 								int appWidgetId, boolean sendRequest) {
@@ -120,14 +61,55 @@ public class BalanceWidget extends AppWidgetProvider {
 		if (sendRequest) {
 			final String serial = BalanceWidgetConfigureActivity.loadWidgetSerial(context, appWidgetId);
 			final String fourDigits = BalanceWidgetConfigureActivity.loadWidgetFourDigits(context, appWidgetId);
-			if (serial != null && serial.length() == 10 && fourDigits != null && fourDigits.length() == 4) {
-				final String url = "http://www.trkarta.sk/balance?card_serial=" + serial + "&pan_4_digits=" + fourDigits;
-				new GetUrlContentTask(context, appWidgetId).execute(url);
-			}
+			createRequest(context, appWidgetManager, appWidgetId, serial, fourDigits);
 		}
 
 		// Instruct the widget manager to update the widget
 		appWidgetManager.updateAppWidget(appWidgetId, views);
+	}
+
+	private static void createRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId, final String serial, final String fourDigits) {
+
+		if (serial == null || serial.length() != 10 || fourDigits == null || fourDigits.length() != 4)
+			return;
+
+		Log.d(TAG, "Sending request...");
+		HttpUrl url = new HttpUrl.Builder()
+				.scheme("http")
+				.host("www.trkarta.sk")
+				.addPathSegment("balance")
+				.addQueryParameter("card_serial", serial)
+				.addQueryParameter("pan_4_digits", fourDigits)
+				.build();
+		Request request = new Request.Builder()
+				.url(url)
+				.build();
+		mHttpClient.newCall(request).enqueue(new Callback() {
+			@Override
+			public void onFailure(final Call call, IOException e) {
+				Log.d(TAG, "Request failed");
+			}
+
+			@Override
+			public void onResponse(Call call, final Response response) throws IOException {
+				final String content = response.body().string();
+				Log.d(TAG, "Request response = " + content);
+				String text = context.getString(R.string.widget_text_loading);
+				try {
+					final JSONObject json = new JSONObject(content);
+					final boolean resultOk = json.getBoolean("result");
+					if (resultOk) {
+						text = json.getString("balance") + "€";
+					} else {
+						Toast.makeText(context, R.string.wrong_result, Toast.LENGTH_SHORT).show();
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				BalanceWidgetConfigureActivity.saveWidgetText(context, appWidgetId, text);
+				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, false);
+			}
+		});
 	}
 
 	@Override
