@@ -49,8 +49,7 @@
 		android:id="@+id/update_duration_seekbar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:max="11"
-		android:progress="3"/>
+		android:max="11"/>
 
 	<Button
 		android:id="@+id/save_button"

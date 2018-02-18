@@ -86,7 +86,12 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 		mSerialNumber.getEditText().setText(BalanceWidgetHelper.loadWidgetSerial(this, mAppWidgetId));
 		mFourDigits.getEditText().setText(BalanceWidgetHelper.loadWidgetFourDigits(this, mAppWidgetId));
 		final int minutes = BalanceWidgetHelper.loadWidgetUpdateMinutes(this, mAppWidgetId);
+		final int oldProgress = mDurationSeekBar.getProgress();
 		mDurationSeekBar.setProgress(minutesToProgress(minutes));
+		if (oldProgress == mDurationSeekBar.getProgress()) {
+			// trigger onProgressChange explicitly
+			onProgressChanged(mDurationSeekBar, oldProgress, false);
+		}
 	}
 
 	@Override
