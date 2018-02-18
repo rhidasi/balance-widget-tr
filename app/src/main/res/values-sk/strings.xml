@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Zostatok Widget TR</string>
+	<string name="save_widget">Použiť</string>
+	<string name="card_serial_hint">Sériové číslo karty</string>
+	<string name="please_enter_10_digits">Prosím zadajte 10 číslic</string>
+	<string name="please_enter_4_digits">Prosím zadajte 4 číslice</string>
+	<string name="widget_text_error">Chyba</string>
+	<string name="pan_4_digits_hint">Posledné štyri čísla karty</string>
+</resources>

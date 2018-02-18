@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<plurals name="update_minutes">
+		<item quantity="one">Aktualizuj každú minútu</item>
+		<item quantity="other">Aktualizuj každé %1$d minúty</item>
+	</plurals>
+	<plurals name="update_hours">
+		<item quantity="one">Aktualizuj každú hodinu</item>
+		<item quantity="other">Aktualizuj každé %1$d hodiny</item>
+	</plurals>
+</resources>
