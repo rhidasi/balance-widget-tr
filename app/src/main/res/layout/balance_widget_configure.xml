@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:animateLayoutChanges="true"
 	android:orientation="vertical"
 	android:padding="16dp">
 
@@ -11,8 +11,9 @@
 		android:id="@+id/appwidget_card_serial"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
-		android:hint="@string/card_serial_hint">
+		android:layout_margin="@dimen/configure_horizontal_margin"
+		android.support.design:counterEnabled="true"
+		android.support.design:counterMaxLength="10">
 		<android.support.design.widget.TextInputEditText
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -26,8 +27,9 @@
 		android:id="@+id/appwidget_pan_4_digits"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
-		android:hint="@string/pan_4_digits_hint">
+		android:layout_margin="@dimen/configure_horizontal_margin"
+		android.support.design:counterEnabled="true"
+		android.support.design:counterMaxLength="4">
 		<android.support.design.widget.TextInputEditText
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -41,7 +43,7 @@
 		android:id="@+id/update_duration_text"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
+		android:layout_margin="@dimen/configure_horizontal_margin"
 		android:textSize="16sp"/>
 
 	<SeekBar
@@ -55,7 +57,7 @@
 		android:id="@+id/save_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
+		android:layout_margin="@dimen/configure_horizontal_margin"
 		android:text="@string/save_widget"
 		android:textSize="16sp"
 		android:enabled="false"/>

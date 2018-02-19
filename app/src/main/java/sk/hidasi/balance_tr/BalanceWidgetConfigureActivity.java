@@ -83,8 +83,15 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 			finish();
 		}
 
-		mSerialNumber.getEditText().setText(BalanceWidgetHelper.loadWidgetSerial(this, mAppWidgetId));
-		mFourDigits.getEditText().setText(BalanceWidgetHelper.loadWidgetFourDigits(this, mAppWidgetId));
+		loadStoredValues();
+	}
+
+	private void loadStoredValues() {
+
+		final String serial = BalanceWidgetHelper.loadWidgetSerial(this, mAppWidgetId);
+		mSerialNumber.getEditText().setText(serial);
+		final String four = BalanceWidgetHelper.loadWidgetFourDigits(this, mAppWidgetId);
+		mFourDigits.getEditText().setText(four);
 		final int minutes = BalanceWidgetHelper.loadWidgetUpdateMinutes(this, mAppWidgetId);
 		final int oldProgress = mDurationSeekBar.getProgress();
 		mDurationSeekBar.setProgress(minutesToProgress(minutes));
@@ -106,8 +113,8 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 	public void afterTextChanged(Editable editable) {
 		final boolean serialOk = mSerialNumber.getEditText().length() == 10;
 		final boolean fourOk = mFourDigits.getEditText().length() == 4;
-		mSerialNumber.setError(serialOk ? null : getString(R.string.please_enter_10_digits));
-		mFourDigits.setError(fourOk ? null : getString(R.string.please_enter_4_digits));
+		mSerialNumber.setError(serialOk || mSerialNumber.getEditText().length() == 0 ? null : getString(R.string.please_enter_10_digits));
+		mFourDigits.setError(fourOk || mFourDigits.getEditText().length() == 0 ? null : getString(R.string.please_enter_4_digits));
 		mAddButton.setEnabled(serialOk && fourOk);
 		if (serialOk && !fourOk) {
 			mFourDigits.requestFocus();
