@@ -2,10 +2,12 @@
 <resources>
 	<plurals name="update_minutes">
 		<item quantity="one">Aktualizuj každú minútu</item>
-		<item quantity="other">Aktualizuj každé %1$d minúty</item>
+		<item quantity="few">Aktualizuj každé %1$d minúty</item>
+		<item quantity="other">Aktualizuj každé %1$d minút</item>
 	</plurals>
 	<plurals name="update_hours">
 		<item quantity="one">Aktualizuj každú hodinu</item>
-		<item quantity="other">Aktualizuj každé %1$d hodiny</item>
+		<item quantity="few">Aktualizuj každé %1$d hodiny</item>
+		<item quantity="other">Aktualizuj každých %1$d hodín</item>
 	</plurals>
 </resources>

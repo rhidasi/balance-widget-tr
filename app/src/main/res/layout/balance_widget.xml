@@ -10,6 +10,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:src="@mipmap/ic_widget"
+		android:contentDescription="@null"
 		android:scaleType="fitCenter"
 		android:alpha="0.9"/>
 
@@ -34,6 +35,6 @@
 		android:layout_gravity="right|bottom"
 		android:background="#0000"
 		android:src="@drawable/ic_settings_black"
-		/>
+		android:contentDescription="@string/settings"/>
 
 </FrameLayout>

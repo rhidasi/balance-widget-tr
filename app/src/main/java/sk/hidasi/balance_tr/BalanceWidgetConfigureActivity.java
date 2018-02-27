@@ -113,8 +113,8 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 	public void afterTextChanged(Editable editable) {
 		final boolean serialOk = mSerialNumber.getEditText().length() == 10;
 		final boolean fourOk = mFourDigits.getEditText().length() == 4;
-		mSerialNumber.setError(serialOk || mSerialNumber.getEditText().length() == 0 ? null : getString(R.string.please_enter_10_digits));
-		mFourDigits.setError(fourOk || mFourDigits.getEditText().length() == 0 ? null : getString(R.string.please_enter_4_digits));
+		mSerialNumber.setError(serialOk || mSerialNumber.getEditText().length() == 0 ? null : getString(R.string.enter_10_digits));
+		mFourDigits.setError(fourOk || mFourDigits.getEditText().length() == 0 ? null : getString(R.string.enter_4_digits));
 		mAddButton.setEnabled(serialOk && fourOk);
 		if (serialOk && !fourOk) {
 			mFourDigits.requestFocus();

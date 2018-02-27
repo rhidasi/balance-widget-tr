@@ -3,8 +3,9 @@
 	<string name="widget_text_loading" translatable="false">&#8230; &#8364;</string>
 	<string name="save_widget">Apply</string>
 	<string name="card_serial_hint">Serial number of the card</string>
-	<string name="please_enter_10_digits">Please enter 10 digits</string>
+	<string name="enter_10_digits">Enter 10 digits</string>
 	<string name="pan_4_digits_hint">Last four digits of the card</string>
-	<string name="please_enter_4_digits">Please enter 4 digits</string>
+	<string name="enter_4_digits">Enter 4 digits</string>
 	<string name="widget_text_error">Error</string>
+	<string name="settings">Settings</string>
 </resources>
