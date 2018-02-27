@@ -37,45 +37,48 @@ public class BalanceWidgetHelper {
 		if (serial == null || serial.length() != 10 || fourDigits == null || fourDigits.length() != 4)
 			return;
 
-		Log.d(TAG, "Sending request...");
-		HttpUrl url = new HttpUrl.Builder()
+		final HttpUrl url = new HttpUrl.Builder()
 				.scheme("http")
 				.host("www.trkarta.sk")
 				.addPathSegment("balance")
 				.addQueryParameter("card_serial", serial)
 				.addQueryParameter("pan_4_digits", fourDigits)
 				.build();
-		Request request = new Request.Builder()
+		final Request request = new Request.Builder()
 				.url(url)
 				.build();
-		OkHttpClient client = new OkHttpClient();
+		final OkHttpClient client = new OkHttpClient();
+
+		Log.d(TAG, "Sending request...");
 		client.newCall(request).enqueue(new Callback() {
 
 			@Override
 			public void onFailure(final Call call, IOException e) {
 				Log.d(TAG, "Request failed");
 				// shedule next update
-				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId);
+				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, false);
 			}
 
 			@Override
 			public void onResponse(Call call, final Response response) throws IOException {
 				final String content = response.body().string();
 				Log.d(TAG, "Request response = " + content);
-				String text;
 				try {
 					final JSONObject json = new JSONObject(content);
 					final boolean resultOk = json.getBoolean("result");
+					String text;
 					if (resultOk) {
 						text = json.getString("balance") + "€";
 					} else {
 						text = context.getString(R.string.widget_text_error);
 					}
+					saveWidgetText(context, appWidgetId, text);
+					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, true);
 				} catch (JSONException e) {
-					text = context.getString(R.string.widget_text_loading);
+					final String text = context.getString(R.string.widget_text_loading);
+					saveWidgetText(context, appWidgetId, text);
+					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, false);
 				}
-				saveWidgetText(context, appWidgetId, text);
-				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId);
 			}
 		});
 	}

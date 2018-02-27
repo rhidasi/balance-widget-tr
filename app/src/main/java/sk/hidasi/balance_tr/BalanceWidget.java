@@ -18,37 +18,40 @@ public class BalanceWidget extends AppWidgetProvider {
 	private static final String ACTION_WIDGET_REFRESH = "sk.hidasi.action_widget_refresh";
 	private static final String ACTION_WIDGET_SETTINGS = "sk.hidasi.action_widget_settings";
 	private static final String WIDGET_ID = "widget_id";
+	private static final int ON_FAILURE_RETRY_MINUTES = 5;
 
-	public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+	public static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, int appWidgetId, boolean requestOk) {
 
 		final CharSequence widgetText = BalanceWidgetHelper.loadWidgetText(context, appWidgetId);
 		// Construct the RemoteViews object
 		final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.balance_widget);
 		views.setTextViewText(R.id.widget_text, widgetText);
 
+		final PendingIntent refreshIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_REFRESH);
+		views.setOnClickPendingIntent(R.id.widget_layout, refreshIntent);
 		final AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		final long trigger = getAlarmTrigger(context, appWidgetId, requestOk);
+		alarm.cancel(refreshIntent);
+		alarm.set(AlarmManager.ELAPSED_REALTIME, trigger, refreshIntent);
 
-		{
-			Intent intent = new Intent(context, BalanceWidget.class);
-			intent.setAction(ACTION_WIDGET_REFRESH);
-			intent.putExtra(WIDGET_ID, appWidgetId);
-			final PendingIntent pending = PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			views.setOnClickPendingIntent(R.id.widget_layout, pending);
-			final long interval = 1000 * 60 * BalanceWidgetHelper.loadWidgetUpdateMinutes(context, appWidgetId);
-			alarm.cancel(pending);
-			alarm.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + interval, pending);
-		}
-
-		{
-			Intent intent = new Intent(context, BalanceWidget.class);
-			intent.setAction(ACTION_WIDGET_SETTINGS);
-			intent.putExtra(WIDGET_ID, appWidgetId);
-			final PendingIntent pending = PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			views.setOnClickPendingIntent(R.id.widget_settings, pending);
-		}
+		final PendingIntent settingsIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_SETTINGS);
+		views.setOnClickPendingIntent(R.id.widget_settings, settingsIntent);
 
 		// Instruct the widget manager to update the widget
 		appWidgetManager.updateAppWidget(appWidgetId, views);
+	}
+
+	private static PendingIntent createPendingIntent(final Context context, int appWidgetId, final String action)
+	{
+		Intent intent = new Intent(context, BalanceWidget.class);
+		intent.setAction(action);
+		intent.putExtra(WIDGET_ID, appWidgetId);
+		return PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	}
+
+	private static long getAlarmTrigger(final Context context, int appWidgetId, boolean requestOk) {
+		final long interval = 1000 * 60 * (requestOk ? BalanceWidgetHelper.loadWidgetUpdateMinutes(context, appWidgetId) : ON_FAILURE_RETRY_MINUTES);
+		return SystemClock.elapsedRealtime() + interval;
 	}
 
 	@Override
