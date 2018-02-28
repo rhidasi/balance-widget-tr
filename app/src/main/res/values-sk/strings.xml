@@ -8,4 +8,5 @@
 	<string name="widget_text_error">Chyba</string>
 	<string name="pan_4_digits_hint">Posledné štyri čísla karty</string>
 	<string name="settings">Nastavenia</string>
+	<string name="dark_theme">Tmavá téma</string>
 </resources>

@@ -23,8 +23,10 @@ public class BalanceWidget extends AppWidgetProvider {
 	public static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, int appWidgetId, boolean requestOk) {
 
 		final CharSequence widgetText = BalanceWidgetHelper.loadWidgetText(context, appWidgetId);
+		final boolean darkTheme = BalanceWidgetHelper.loadWidgetDarkTheme(context, appWidgetId);
+
 		// Construct the RemoteViews object
-		final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.balance_widget);
+		final RemoteViews views = new RemoteViews(context.getPackageName(), darkTheme ? R.layout.balance_widget_dark : R.layout.balance_widget);
 		views.setTextViewText(R.id.widget_text, widgetText);
 
 		final PendingIntent refreshIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_REFRESH);

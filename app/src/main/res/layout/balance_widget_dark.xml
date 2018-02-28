@@ -9,10 +9,10 @@
 	<ImageView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:src="@mipmap/ic_widget"
+		android:src="@mipmap/ic_widget_dark"
 		android:contentDescription="@null"
 		android:scaleType="fitCenter"
-		android:alpha="0.9"/>
+		android:alpha="0.8"/>
 
 	<TextView
 		android:id="@+id/widget_text"
@@ -22,7 +22,7 @@
 		android:layout_marginLeft="@dimen/widget_text_padding"
 		android:gravity="center"
 		android:text="@string/widget_text_loading"
-		android:textColor="#000"
+		android:textColor="#FFF"
 		android:textStyle="bold"
 		android:textSize="@dimen/widget_text_size"/>
 
@@ -35,7 +35,7 @@
 		android:layout_gravity="right|bottom"
 		android:background="@android:color/transparent"
 		android:src="@drawable/ic_settings_black"
-		android:tint="#000"
+		android:tint="#FFF"
 		android:contentDescription="@string/settings"/>
 
 </FrameLayout>

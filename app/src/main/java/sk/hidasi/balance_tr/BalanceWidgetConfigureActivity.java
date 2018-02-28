@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -31,6 +32,8 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 	SeekBar mDurationSeekBar;
 	@BindView(R.id.update_duration_text)
 	TextView mDurationText;
+	@BindView(R.id.dark_theme)
+	Switch mDarkTheme;
 	@BindView(R.id.save_button)
 	Button mAddButton;
 
@@ -40,7 +43,8 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 		final String serial = mSerialNumber.getEditText().getText().toString();
 		final String fourDigits = mFourDigits.getEditText().getText().toString();
 		final int updateDuration = progressToMinutes(mDurationSeekBar.getProgress());
-		BalanceWidgetHelper.saveWidgetPrefs(this, mAppWidgetId, serial, fourDigits, updateDuration);
+		final boolean darkTheme = mDarkTheme.isChecked();
+		BalanceWidgetHelper.saveWidgetPrefs(this, mAppWidgetId, serial, fourDigits, updateDuration, darkTheme);
 
 		// It is the responsibility of the configuration activity to update the app widget
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -99,6 +103,8 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 			// trigger onProgressChange explicitly
 			onProgressChanged(mDurationSeekBar, oldProgress, false);
 		}
+		final boolean darkTheme = BalanceWidgetHelper.loadWidgetDarkTheme(this, mAppWidgetId);
+		mDarkTheme.setChecked(darkTheme);
 	}
 
 	@Override

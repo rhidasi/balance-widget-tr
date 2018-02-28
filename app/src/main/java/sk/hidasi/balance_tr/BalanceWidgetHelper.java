@@ -28,6 +28,7 @@ public class BalanceWidgetHelper {
 	private static final String PREF_PREFIX_SERIAL = "appwidget_serial_";
 	private static final String PREF_PREFIX_FOUR_DIGITS = "appwidget_four_digits_";
 	private static final String PREF_PREFIX_UPDATE_MINUTES = "appwidget_update_minutes_";
+	private static final String PREF_PREFIX_DARK_THEME = "appwidget_dark_theme_";
 
 	public static void createHttpRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
 
@@ -103,6 +104,11 @@ public class BalanceWidgetHelper {
 		return  prefs.getInt(PREF_PREFIX_UPDATE_MINUTES + appWidgetId, 30);
 	}
 
+	static boolean loadWidgetDarkTheme(Context context, int appWidgetId) {
+		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+		return  prefs.getBoolean(PREF_PREFIX_DARK_THEME + appWidgetId, false);
+	}
+
 	static void saveWidgetText(Context context, int appWidgetId, String result) {
 		Log.d(TAG, "saveWidgetText(), appWidgetId=" + appWidgetId);
 		SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
@@ -110,12 +116,13 @@ public class BalanceWidgetHelper {
 		prefs.apply();
 	}
 
-	static void saveWidgetPrefs(Context context, int appWidgetId, String serial, String fourDigits, int updateMinutes) {
+	static void saveWidgetPrefs(Context context, int appWidgetId, String serial, String fourDigits, int updateMinutes, boolean darkTheme) {
 		Log.d(TAG, "saveWidgetPrefs(), appWidgetId=" + appWidgetId);
 		SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
 		prefs.putString(PREF_PREFIX_SERIAL + appWidgetId, serial);
 		prefs.putString(PREF_PREFIX_FOUR_DIGITS + appWidgetId, fourDigits);
 		prefs.putInt(PREF_PREFIX_UPDATE_MINUTES + appWidgetId, updateMinutes);
+		prefs.putBoolean(PREF_PREFIX_DARK_THEME + appWidgetId, darkTheme);
 		prefs.apply();
 	}
 

@@ -11,7 +11,7 @@
 		android:id="@+id/appwidget_card_serial"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/configure_horizontal_margin"
+		android:layout_marginTop="@dimen/configure_horizontal_margin"
 		android.support.design:counterEnabled="true"
 		android.support.design:counterMaxLength="10">
 		<android.support.design.widget.TextInputEditText
@@ -27,7 +27,7 @@
 		android:id="@+id/appwidget_pan_4_digits"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/configure_horizontal_margin"
+		android:layout_marginTop="@dimen/configure_horizontal_margin"
 		android.support.design:counterEnabled="true"
 		android.support.design:counterMaxLength="4">
 		<android.support.design.widget.TextInputEditText
@@ -43,7 +43,7 @@
 		android:id="@+id/update_duration_text"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/configure_horizontal_margin"
+		android:layout_marginTop="@dimen/configure_horizontal_margin"
 		android:textSize="16sp"/>
 
 	<SeekBar
@@ -53,11 +53,19 @@
 		android:layout_height="wrap_content"
 		android:max="11"/>
 
+	<Switch
+		android:id="@+id/dark_theme"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/configure_horizontal_margin"
+		android:text="@string/dark_theme"
+		android:textSize="16sp"/>
+
 	<Button
 		android:id="@+id/save_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/configure_horizontal_margin"
+		android:layout_marginTop="@dimen/configure_horizontal_margin"
 		android:text="@string/save_widget"
 		android:textSize="16sp"
 		android:enabled="false"/>
