@@ -86,13 +86,15 @@ public class BalanceWidget extends AppWidgetProvider {
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
 
-		if (ACTION_WIDGET_REFRESH.equals(intent.getAction())) {
+		final String action = intent.getAction();
+
+		if (ACTION_WIDGET_REFRESH.equals(action)) {
 			final int appWidgetId = intent.getIntExtra(WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 			if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
 				AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 				BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, appWidgetId);
 			}
-		} else if (ACTION_WIDGET_SETTINGS.equals(intent.getAction())) {
+		} else if (ACTION_WIDGET_SETTINGS.equals(action)) {
 			final int widgetId = intent.getIntExtra(WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 			if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
 				Intent configIntent = new Intent(context, BalanceWidgetConfigureActivity.class);

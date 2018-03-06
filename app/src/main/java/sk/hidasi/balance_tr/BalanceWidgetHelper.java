@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -48,7 +49,11 @@ public class BalanceWidgetHelper {
 		final Request request = new Request.Builder()
 				.url(url)
 				.build();
-		final OkHttpClient client = new OkHttpClient();
+
+		final OkHttpClient client = new OkHttpClient.Builder()
+				.connectTimeout(10, TimeUnit.SECONDS)
+				.readTimeout(10, TimeUnit.SECONDS)
+				.build();
 
 		Log.d(TAG, "Sending request...");
 		client.newCall(request).enqueue(new Callback() {
@@ -62,8 +67,8 @@ public class BalanceWidgetHelper {
 
 			@Override
 			public void onResponse(Call call, final Response response) throws IOException {
-				final String content = response.body().string();
-				Log.d(TAG, "Request response = " + content);
+					final String content = response.body().string();
+					Log.d(TAG, "Request response = " + content);
 				try {
 					final JSONObject json = new JSONObject(content);
 					final boolean resultOk = json.getBoolean("result");
