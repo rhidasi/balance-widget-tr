@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Zostatok Widget TR</string>
+	<string name="app_homepage">Domovská stránka</string>
 	<string name="save_widget">Použiť</string>
 	<string name="card_serial_hint">Sériové číslo karty</string>
 	<string name="enter_10_digits">Zadajte 10 číslic</string>
@@ -9,4 +10,10 @@
 	<string name="pan_4_digits_hint">Posledné štyri čísla karty</string>
 	<string name="settings">Nastavenia</string>
 	<string name="dark_theme">Tmavá téma</string>
+	<string name="about">O aplikácii</string>
+	<string name="usage">Upozorňujeme, že aplikácia Zostatok Widget TR nie je oficiálnym softvérom spoločnosti Edenred Slovakia, s.r.o. Funkčnosť v budúcnosti nemožno zaručiť.</string>
+	<string name="app_rate">Ohodnoť aplikáciu</string>
+	<string name="license">Licencia</string>
+	<string name="description_title">Popis</string>
+	<string name="description_text">Zostatok Widget TR je open source aplikácia slúžiaca na zobrazovanie zostatku na stravovacích kartách Ticket Restaurant&#174; spoločnosti Edenred Slovakia, s.r.o. Aplikácia zobrazuje zostatok na účte v jednoduchom widgete.</string>
 </resources>

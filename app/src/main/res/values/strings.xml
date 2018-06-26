@@ -1,5 +1,12 @@
 <resources>
 	<string name="app_name">Balance Widget TR</string>
+	<string name="app_company_name" translatable="false">RoHi</string>
+	<string name="app_url" translatable="false">https://github.com/rhidasi/balance-widget-tr</string>
+	<string name="app_copyright" translatable="false">Copyright &#169; 2018</string>
+	<string name="app_rate">Rate this app</string>
+	<string name="app_homepage">Homepage</string>
+	<string name="apache_license" translatable="false">Apache License, Version 2.0</string>
+	<string name="apache_license_url" translatable="false">http://www.apache.org/licenses/LICENSE-2.0</string>
 	<string name="widget_text_loading" translatable="false">&#8230; &#8364;</string>
 	<string name="save_widget">Apply</string>
 	<string name="card_serial_hint">Serial number of the card</string>
@@ -9,4 +16,9 @@
 	<string name="widget_text_error">Error</string>
 	<string name="settings">Settings</string>
 	<string name="dark_theme">Dark theme</string>
+	<string name="about">About</string>
+	<string name="license">License</string>
+	<string name="usage">Please note that the Balance Widget TR application is not an official software of Edenred Slovakia, s.r.o. Functionality in the future can not be guaranteed.</string>
+	<string name="description_title">Description</string>
+	<string name="description_text">Balance Widget TR is an open source application displaying the balance on Ticket Restaurant&#174; dietary tickets from Edenred Slovakia, s.r.o. The application displays the account balance in a simple widget.</string>
 </resources>
