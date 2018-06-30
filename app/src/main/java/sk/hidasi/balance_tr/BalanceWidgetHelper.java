@@ -51,8 +51,19 @@ public class BalanceWidgetHelper {
 		final String serial = loadWidgetSerial(context, appWidgetId);
 		final String fourDigits = loadWidgetFourDigits(context, appWidgetId);
 
-		if (serial == null || serial.length() != 10 || fourDigits == null || fourDigits.length() != 4)
+		if (serial == null || serial.length() != 10 || fourDigits == null || fourDigits.length() != 4) {
+			Log.e(TAG, "Invalid serial number or four digits");
 			return;
+		}
+
+		if (BuildConfig.DEBUG) {
+			// detect "screenshot mode"
+			if (serial.equals("1234567890") && fourDigits.equals("1234")) {
+				saveWidgetText(context, appWidgetId, "12,30€");
+				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, true);
+				return;
+			}
+		}
 
 		final HttpUrl url = new HttpUrl.Builder()
 				.scheme("http")
