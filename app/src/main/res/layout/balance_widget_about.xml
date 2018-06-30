@@ -85,7 +85,7 @@
                 android:layout_marginBottom="@dimen/about_layout_margin"
                 android:layout_marginTop="@dimen/about_layout_margin"
                 android:text="@string/description_title"
-                android:textStyle="italic" />
+                android:textStyle="bold|italic" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                 android:layout_marginBottom="@dimen/about_layout_margin"
                 android:layout_marginTop="@dimen/about_layout_margin"
                 android:text="@string/app_homepage"
-                android:textStyle="italic" />
+                android:textStyle="bold|italic" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -117,7 +117,7 @@
                 android:layout_marginBottom="@dimen/about_layout_margin"
                 android:layout_marginTop="@dimen/about_layout_margin"
                 android:text="@string/license"
-                android:textStyle="italic" />
+                android:textStyle="bold|italic" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -129,6 +129,36 @@
                 android:layout_height="wrap_content"
                 android:autoLink="web"
                 android:text="@string/apache_license_url" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/about_layout_margin"
+                android:layout_marginTop="@dimen/about_layout_margin"
+                android:text="@string/libraries"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/okhttp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="@string/okhttp_url" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/butterknife" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="@string/butterknife_url" />
 
             <Button
                 android:layout_width="wrap_content"

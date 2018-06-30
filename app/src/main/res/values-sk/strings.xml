@@ -2,6 +2,7 @@
 <resources>
 	<string name="app_name">Zostatok Widget TR</string>
 	<string name="app_homepage">Domovská stránka</string>
+	<string name="libraries">Knižnice</string>
 	<string name="save_widget">Použiť</string>
 	<string name="card_serial_hint">Sériové číslo karty</string>
 	<string name="enter_10_digits">Zadajte 10 číslic</string>

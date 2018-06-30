@@ -1,12 +1,17 @@
 <resources>
 	<string name="app_name">Balance Widget TR</string>
 	<string name="app_company_name" translatable="false">RoHi</string>
-	<string name="app_url" translatable="false">https://github.com/rhidasi/balance-widget-tr</string>
+	<string name="app_url" translatable="false">"https://github.com/rhidasi/balance-widget-tr"</string>
 	<string name="app_copyright" translatable="false">Copyright &#169; 2018</string>
 	<string name="app_rate">Rate this app</string>
 	<string name="app_homepage">Homepage</string>
 	<string name="apache_license" translatable="false">Apache License, Version 2.0</string>
 	<string name="apache_license_url" translatable="false">http://www.apache.org/licenses/LICENSE-2.0</string>
+	<string name="libraries">Libraries</string>
+	<string name="okhttp" translatable="false">OkHttp</string>
+	<string name="okhttp_url" translatable="false">"https://github.com/square/okhttp"</string>
+	<string name="butterknife" translatable="false">Butter Knife</string>
+	<string name="butterknife_url" translatable="false">"http://jakewharton.github.io/butterknife"</string>
 	<string name="widget_text_loading" translatable="false">&#8230; &#8364;</string>
 	<string name="save_widget">Apply</string>
 	<string name="card_serial_hint">Serial number of the card</string>
