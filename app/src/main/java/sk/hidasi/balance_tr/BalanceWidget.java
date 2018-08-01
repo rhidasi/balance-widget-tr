@@ -113,6 +113,7 @@ public class BalanceWidget extends AppWidgetProvider {
 			final int widgetId = intent.getIntExtra(WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 			if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
 				Intent configIntent = new Intent(context, BalanceWidgetConfigureActivity.class);
+				configIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 				context.startActivity(configIntent);
 			}

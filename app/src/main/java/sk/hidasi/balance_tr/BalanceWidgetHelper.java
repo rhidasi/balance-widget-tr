@@ -36,7 +36,7 @@ import okhttp3.Response;
 /**
  * Helper methods for the {@link BalanceWidget BalanceWidget} AppWidget and the {@link BalanceWidgetConfigureActivity} Activity.
  */
-public class BalanceWidgetHelper {
+class BalanceWidgetHelper {
 
 	private static final String TAG = BalanceWidgetHelper.class.getSimpleName();
 	private static final String PREFS_NAME = "sk.hidasi.balance_tr.BalanceWidget";
