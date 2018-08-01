@@ -3,6 +3,7 @@
 	android:id="@+id/widget_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:layout_margin="@dimen/widget_margin"
 	android:clickable="true"
 	android:focusable="true">
 
@@ -31,7 +32,6 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="@dimen/widget_settings_padding"
-		android:layout_margin="@dimen/widget_settings_margin"
 		android:layout_gravity="right|bottom"
 		android:background="@android:color/transparent"
 		android:src="@drawable/ic_settings_black"
