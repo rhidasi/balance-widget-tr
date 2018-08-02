@@ -1,4 +1,4 @@
-<h1>Balance Widget TR <img src="images/karta_edenred_preview.png" alt="Application Icon" width="40" height="40"></h1>
+<h1>Balance Widget TR</h1>
 
 Balance Widget TR is an open source application displaying the balance on Ticket Restaurant&#174; dietary tickets from Edenred Slovakia, s.r.o. The application displays the account balance in a simple widget.
 
@@ -15,3 +15,9 @@ Please note that the Balance Widget TR application is not an official software o
 Balance Widget TR is licensed under the Apache License Version 2.0
 
 [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+## Privacy policy
+
+We respect the privacy concerns of our users. The app doesn't have the required permissions to access private data. We do not store or share your personal information, period. 
+
+If there are any questions regarding this privacy policy you may contact us at [rohi.developer@gmail.com](rohi.developer@gmail.com)
