@@ -39,6 +39,8 @@ import okhttp3.Response;
 class BalanceWidgetHelper {
 
 	private static final String TAG = BalanceWidgetHelper.class.getSimpleName();
+	private static final int ON_FAILURE_RETRY_MINUTES = 5;
+
 	private static final String PREFS_NAME = "sk.hidasi.balance_tr.BalanceWidget";
 	private static final String PREF_PREFIX_TEXT = "appwidget_text_";
 	private static final String PREF_PREFIX_SERIAL = "appwidget_serial_";
@@ -60,7 +62,7 @@ class BalanceWidgetHelper {
 			// detect "screenshot mode"
 			if (serial.equals("1234567890") && fourDigits.equals("1234")) {
 				saveWidgetText(context, appWidgetId, "12,30€");
-				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, true);
+				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, 60);
 				return;
 			}
 		}
@@ -87,8 +89,8 @@ class BalanceWidgetHelper {
 			@Override
 			public void onFailure(final Call call, IOException e) {
 				Log.d(TAG, "Request failed");
-				// shedule next update
-				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, false);
+				// schedule next update
+				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, ON_FAILURE_RETRY_MINUTES);
 			}
 
 			@Override
@@ -105,51 +107,52 @@ class BalanceWidgetHelper {
 						text = context.getString(R.string.widget_text_error);
 					}
 					saveWidgetText(context, appWidgetId, text);
-					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, true);
+					final long updateInMinutes = loadWidgetUpdateMinutes(context, appWidgetId);
+					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInMinutes);
 				} catch (JSONException e) {
 					final String text = context.getString(R.string.widget_text_loading);
 					saveWidgetText(context, appWidgetId, text);
-					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, false);
+					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, ON_FAILURE_RETRY_MINUTES);
 				}
 			}
 		});
 	}
 
-	static String loadWidgetText(Context context, int appWidgetId) {
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+	static String loadWidgetText(final Context context, int appWidgetId) {
+		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		return  prefs.getString(PREF_PREFIX_TEXT + appWidgetId, null);
 	}
 
-	static String loadWidgetSerial(Context context, int appWidgetId) {
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+	static String loadWidgetSerial(final Context context, int appWidgetId) {
+		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		return  prefs.getString(PREF_PREFIX_SERIAL + appWidgetId, null);
 	}
 
-	static String loadWidgetFourDigits(Context context, int appWidgetId) {
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+	static String loadWidgetFourDigits(final Context context, int appWidgetId) {
+		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		return  prefs.getString(PREF_PREFIX_FOUR_DIGITS + appWidgetId, null);
 	}
 
-	static int loadWidgetUpdateMinutes(Context context, int appWidgetId) {
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+	static int loadWidgetUpdateMinutes(final Context context, int appWidgetId) {
+		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		return  prefs.getInt(PREF_PREFIX_UPDATE_MINUTES + appWidgetId, 30);
 	}
 
-	static boolean loadWidgetDarkTheme(Context context, int appWidgetId) {
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+	static boolean loadWidgetDarkTheme(final Context context, int appWidgetId) {
+		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		return  prefs.getBoolean(PREF_PREFIX_DARK_THEME + appWidgetId, false);
 	}
 
-	static void saveWidgetText(Context context, int appWidgetId, String result) {
+	static void saveWidgetText(final Context context, int appWidgetId, final String text) {
 		Log.d(TAG, "saveWidgetText(), appWidgetId=" + appWidgetId);
-		SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-		prefs.putString(PREF_PREFIX_TEXT + appWidgetId, result);
+		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+		prefs.putString(PREF_PREFIX_TEXT + appWidgetId, text);
 		prefs.apply();
 	}
 
-	static void saveWidgetPrefs(Context context, int appWidgetId, String serial, String fourDigits, int updateMinutes, boolean darkTheme) {
+	static void saveWidgetPrefs(final Context context, int appWidgetId, final String serial, final String fourDigits, int updateMinutes, boolean darkTheme) {
 		Log.d(TAG, "saveWidgetPrefs(), appWidgetId=" + appWidgetId);
-		SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
 		prefs.putString(PREF_PREFIX_SERIAL + appWidgetId, serial);
 		prefs.putString(PREF_PREFIX_FOUR_DIGITS + appWidgetId, fourDigits);
 		prefs.putInt(PREF_PREFIX_UPDATE_MINUTES + appWidgetId, updateMinutes);
@@ -157,8 +160,8 @@ class BalanceWidgetHelper {
 		prefs.apply();
 	}
 
-	static void deleteWidgetPrefs(Context context, int appWidgetId) {
-		SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+	static void deleteWidgetPrefs(final Context context, int appWidgetId) {
+		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
 		prefs.remove(PREF_PREFIX_TEXT + appWidgetId);
 		prefs.remove(PREF_PREFIX_SERIAL + appWidgetId);
 		prefs.remove(PREF_PREFIX_FOUR_DIGITS + appWidgetId);
