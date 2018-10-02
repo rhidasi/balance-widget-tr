@@ -1,80 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:orientation="vertical"
-	android:padding="16dp">
+	android:layout_height="match_parent">
 
-	<android.support.design.widget.TextInputLayout
-		android:id="@+id/appwidget_card_serial"
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/configure_horizontal_margin"
-		android.support.design:counterEnabled="true"
-		android.support.design:counterMaxLength="10">
-		<android.support.design.widget.TextInputEditText
+		android:orientation="vertical"
+		android:padding="16dp">
+
+		<android.support.design.widget.TextInputLayout
+			android:id="@+id/appwidget_card_serial"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/card_serial_hint"
-			android:textSize="20sp"
-			android:maxLength="10"
-			android:inputType="number"/>
-	</android.support.design.widget.TextInputLayout>
+			android:layout_marginTop="@dimen/configure_horizontal_margin"
+			android.support.design:counterEnabled="true"
+			android.support.design:counterMaxLength="10">
+			<android.support.design.widget.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/card_serial_hint"
+				android:textSize="20sp"
+				android:maxLength="10"
+				android:inputType="number"/>
+		</android.support.design.widget.TextInputLayout>
 
-	<android.support.design.widget.TextInputLayout
-		android:id="@+id/appwidget_pan_4_digits"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/configure_horizontal_margin"
-		android.support.design:counterEnabled="true"
-		android.support.design:counterMaxLength="4">
-		<android.support.design.widget.TextInputEditText
+		<android.support.design.widget.TextInputLayout
+			android:id="@+id/appwidget_pan_4_digits"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/pan_4_digits_hint"
-			android:textSize="20sp"
-			android:maxLength="4"
-			android:inputType="number"/>
-	</android.support.design.widget.TextInputLayout>
+			android:layout_marginTop="@dimen/configure_horizontal_margin"
+			android.support.design:counterEnabled="true"
+			android.support.design:counterMaxLength="4">
+			<android.support.design.widget.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/pan_4_digits_hint"
+				android:textSize="20sp"
+				android:maxLength="4"
+				android:inputType="number"/>
+		</android.support.design.widget.TextInputLayout>
 
-	<TextView
-		android:id="@+id/update_duration_text"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/configure_horizontal_margin"
-		android:textSize="16sp"/>
+		<TextView
+			android:id="@+id/update_duration_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/configure_horizontal_margin"
+			android:textSize="16sp"/>
 
-	<SeekBar
-		style="@style/Widget.AppCompat.SeekBar.Discrete"
-		android:id="@+id/update_duration_seekbar"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:max="11"/>
+		<SeekBar
+			style="@style/Widget.AppCompat.SeekBar.Discrete"
+			android:id="@+id/update_duration_seekbar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:max="11"/>
 
-	<Switch
-		android:id="@+id/dark_theme"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/configure_horizontal_margin"
-		android:text="@string/dark_theme"
-		android:textSize="16sp"/>
+		<Switch
+			android:id="@+id/dark_theme"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/configure_horizontal_margin"
+			android:text="@string/dark_theme"
+			android:textSize="16sp"/>
 
-	<TextView
-		android:id="@+id/textView"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/usage"
-		android:textSize="12sp"/>
+		<TextView
+			android:id="@+id/textView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/usage"
+			android:textSize="12sp"/>
 
-	<Button
-		android:id="@+id/save_button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/configure_horizontal_margin"
-		android:text="@string/save_widget"
-		android:textSize="16sp"
-		android:enabled="false"/>
+		<Button
+			android:id="@+id/save_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/configure_horizontal_margin"
+			android:text="@string/save_widget"
+			android:textSize="16sp"
+			android:enabled="false"/>
 
-</LinearLayout>
+	</LinearLayout>
+
+</ScrollView>

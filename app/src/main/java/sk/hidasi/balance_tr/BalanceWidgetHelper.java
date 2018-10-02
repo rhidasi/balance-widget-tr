@@ -15,10 +15,13 @@
  */
 package sk.hidasi.balance_tr;
 
+import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.MenuItem;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -116,6 +119,18 @@ class BalanceWidgetHelper {
 				}
 			}
 		});
+	}
+
+	static boolean onOptionsItemSelected(final Activity activity, final MenuItem item) {
+		// Handle menu item selection
+		switch (item.getItemId()) {
+			case R.id.about:
+				Intent intent = new Intent(activity, AboutActivity.class);
+				activity.startActivity(intent);
+				return true;
+			default:
+				return activity.onOptionsItemSelected(item);
+		}
 	}
 
 	static String loadWidgetText(final Context context, int appWidgetId) {

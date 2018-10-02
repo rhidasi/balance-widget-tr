@@ -117,15 +117,7 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-			case R.id.about:
-				Intent intent = new Intent(this, AboutActivity.class);
-				startActivity(intent);
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
+		return BalanceWidgetHelper.onOptionsItemSelected(this, item);
 	}
 
 	private void loadStoredValues() {

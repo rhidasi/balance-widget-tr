@@ -21,8 +21,17 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.graphics.drawable.VectorDrawableCompat;
+import android.util.TypedValue;
 import android.widget.RemoteViews;
 
 /**
@@ -37,25 +46,53 @@ public class BalanceWidget extends AppWidgetProvider {
 
 	public static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, int appWidgetId, long nextUpdateInMinutes) {
 
-		final CharSequence widgetText = BalanceWidgetHelper.loadWidgetText(context, appWidgetId);
+		final String widgetText = BalanceWidgetHelper.loadWidgetText(context, appWidgetId);
 		final boolean darkTheme = BalanceWidgetHelper.loadWidgetDarkTheme(context, appWidgetId);
 
-		// Construct the RemoteViews object
-		final RemoteViews views = new RemoteViews(context.getPackageName(), darkTheme ? R.layout.balance_widget_dark : R.layout.balance_widget);
-		views.setTextViewText(R.id.widget_text, widgetText);
+		final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.balance_widget);
+		final Resources resources = context.getResources();
 
-		final PendingIntent refreshIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_REFRESH);
-		views.setOnClickPendingIntent(R.id.widget_layout, refreshIntent);
+		final BitmapFactory.Options opt = new BitmapFactory.Options();
+		opt.inMutable = true;
+		opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		final Bitmap bmp = BitmapFactory.decodeResource(resources, darkTheme ? R.mipmap.ic_widget_dark : R.mipmap.ic_widget, opt);
+		final Canvas canvas = new Canvas(bmp);
+		final int width = canvas.getWidth();
+		final int height = canvas.getHeight();
+
+		if (widgetText != null) {
+			final Paint textPaint = new Paint();
+			textPaint.setStyle(Paint.Style.FILL);
+			textPaint.setColor(darkTheme ? Color.WHITE : Color.BLACK);
+			textPaint.setTextSize(resources.getDimension(R.dimen.widget_text_size));
+			textPaint.setTextAlign(Paint.Align.CENTER);
+
+			textPaint.setAntiAlias(true);
+			textPaint.setTypeface(Typeface.DEFAULT_BOLD);
+
+			int xPos = (int) (0.54 * width);
+			int yPos = (int) (0.55 * height - (textPaint.descent() + textPaint.ascent()) / 2.);
+			canvas.drawText(widgetText, xPos, yPos, textPaint);
+		}
+
+		final VectorDrawableCompat settingsDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_settings_black, null);
+		settingsDrawable.setBounds((int) (0.78 * width), (int) (0.78 * height), (int) (0.97 * width), (int) (0.97 * height));
+		settingsDrawable.setTint(darkTheme ? Color.WHITE : Color.BLACK);
+		settingsDrawable.draw(canvas);
+
+		views.setImageViewBitmap(R.id.imageView, bmp);
+		views.setInt(R.id.imageView, "setAlpha", darkTheme ? 190 : 230);
 
 		if (nextUpdateInMinutes > 0) {
 			final AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			final long triggerTime = SystemClock.elapsedRealtime() + nextUpdateInMinutes * 60 * 1000;
+			final PendingIntent refreshIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_REFRESH);
 			alarm.cancel(refreshIntent);
 			alarm.set(AlarmManager.ELAPSED_REALTIME, triggerTime, refreshIntent);
 		}
 
 		final PendingIntent settingsIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_SETTINGS);
-		views.setOnClickPendingIntent(R.id.widget_settings, settingsIntent);
+		views.setOnClickPendingIntent(R.id.imageView, settingsIntent);
 
 		// Instruct the widget manager to update the widget
 		appWidgetManager.updateAppWidget(appWidgetId, views);

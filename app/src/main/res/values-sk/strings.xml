@@ -17,4 +17,6 @@
 	<string name="license">Licencia</string>
 	<string name="description_title">Popis</string>
 	<string name="description_text">Zostatok Widget TR je open source aplikácia slúžiaca na zobrazovanie zostatku na stravovacích kartách Ticket Restaurant&#174; spoločnosti Edenred Slovakia, s.r.o. Aplikácia zobrazuje zostatok na účte v jednoduchom widgete.</string>
+	<string name="main_activity_description">Toto je widget (miniaplikácia)!\nAk chcete používať túto aplikáciu, musíte si na svojej domovskej obrazovke vytvoriť widget (miniaplikáciu).\nKliknutím na tlačidlo nižšie sa dozviete ako vytvoriť miniaplikáciu.</string>
+	<string name="watch_tutorial">Pozrieť návod</string>
 </resources>
