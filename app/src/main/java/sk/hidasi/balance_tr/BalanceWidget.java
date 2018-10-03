@@ -30,8 +30,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.graphics.drawable.VectorDrawableCompat;
-import android.util.TypedValue;
 import android.widget.RemoteViews;
 
 /**
@@ -41,8 +39,9 @@ import android.widget.RemoteViews;
 public class BalanceWidget extends AppWidgetProvider {
 
 	private static final String ACTION_WIDGET_REFRESH = "sk.hidasi.action_widget_refresh";
-	private static final String ACTION_WIDGET_SETTINGS = "sk.hidasi.action_widget_settings";
+	private static final String ACTION_WIDGET_CLICK = "sk.hidasi.action_widget_click";
 	private static final String WIDGET_ID = "widget_id";
+	private static final long DOUBLE_CLICK_DELAY = 250;
 
 	public static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, int appWidgetId, long nextUpdateInMinutes) {
 
@@ -71,14 +70,10 @@ public class BalanceWidget extends AppWidgetProvider {
 			textPaint.setTypeface(Typeface.DEFAULT_BOLD);
 
 			int xPos = (int) (0.54 * width);
-			int yPos = (int) (0.55 * height - (textPaint.descent() + textPaint.ascent()) / 2.);
+			int yPos = (int) (0.56 * height - (textPaint.descent() + textPaint.ascent()) / 2.);
 			canvas.drawText(widgetText, xPos, yPos, textPaint);
 		}
 
-		final VectorDrawableCompat settingsDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_settings_black, null);
-		settingsDrawable.setBounds((int) (0.78 * width), (int) (0.78 * height), (int) (0.97 * width), (int) (0.97 * height));
-		settingsDrawable.setTint(darkTheme ? Color.WHITE : Color.BLACK);
-		settingsDrawable.draw(canvas);
 
 		views.setImageViewBitmap(R.id.imageView, bmp);
 		views.setInt(R.id.imageView, "setAlpha", darkTheme ? 190 : 230);
@@ -91,7 +86,7 @@ public class BalanceWidget extends AppWidgetProvider {
 			alarm.set(AlarmManager.ELAPSED_REALTIME, triggerTime, refreshIntent);
 		}
 
-		final PendingIntent settingsIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_SETTINGS);
+		final PendingIntent settingsIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_CLICK);
 		views.setOnClickPendingIntent(R.id.imageView, settingsIntent);
 
 		// Instruct the widget manager to update the widget
@@ -137,22 +132,29 @@ public class BalanceWidget extends AppWidgetProvider {
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
 
-		final String action = intent.getAction();
+		final int widgetId = intent.getIntExtra(WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+		if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID)
+			return;
 
+		final String action = intent.getAction();
 		if (ACTION_WIDGET_REFRESH.equals(action)) {
-			final int appWidgetId = intent.getIntExtra(WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-			if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+			BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId);
+		} else if (ACTION_WIDGET_CLICK.equals(action)) {
+			final long currentClickMillis = System.currentTimeMillis();
+			final long lastClickMillis = BalanceWidgetHelper.loadWidgetClickMillis(context, widgetId);
+			if (currentClickMillis - lastClickMillis > DOUBLE_CLICK_DELAY) {
+				// first click refresh
 				AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-				BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, appWidgetId);
-			}
-		} else if (ACTION_WIDGET_SETTINGS.equals(action)) {
-			final int widgetId = intent.getIntExtra(WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-			if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+				BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId);
+			} else {
+				// double click, open settings
 				Intent configIntent = new Intent(context, BalanceWidgetConfigureActivity.class);
 				configIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 				context.startActivity(configIntent);
 			}
+			BalanceWidgetHelper.saveWidgetClickMillis(context, widgetId, currentClickMillis);
 		}
 	}
 }

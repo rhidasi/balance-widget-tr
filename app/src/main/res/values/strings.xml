@@ -1,31 +1,30 @@
 <resources>
-    <string name="app_name">Balance Widget TR</string>
-    <string name="app_company_name" translatable="false">RoHi</string>
-    <string name="app_url" translatable="false">"https://github.com/rhidasi/balance-widget-tr"</string>
-    <string name="app_copyright" translatable="false">Copyright &#169; 2018</string>
-    <string name="app_rate">Rate this app</string>
-    <string name="app_homepage">Homepage</string>
-    <string name="apache_license" translatable="false">Apache License, Version 2.0</string>
-    <string name="apache_license_url" translatable="false">http://www.apache.org/licenses/LICENSE-2.0</string>
-    <string name="libraries">Libraries</string>
-    <string name="okhttp" translatable="false">OkHttp</string>
-    <string name="okhttp_url" translatable="false">"https://github.com/square/okhttp"</string>
-    <string name="butterknife" translatable="false">Butter Knife</string>
-    <string name="butterknife_url" translatable="false">"http://jakewharton.github.io/butterknife"</string>
-    <string name="widget_text_loading" translatable="false">&#8230; &#8364;</string>
-    <string name="save_widget">Apply</string>
-    <string name="card_serial_hint">Serial number of the card</string>
-    <string name="enter_10_digits">Enter 10 digits</string>
-    <string name="pan_4_digits_hint">Last four digits of the card</string>
-    <string name="enter_4_digits">Enter 4 digits</string>
-    <string name="widget_text_error">Error</string>
-    <string name="settings">Settings</string>
-    <string name="dark_theme">Dark theme</string>
-    <string name="about">About</string>
-    <string name="license">License</string>
-    <string name="usage">Please note that the Balance Widget TR application is not an official software of Edenred Slovakia, s.r.o. Functionality in the future can not be guaranteed.</string>
-    <string name="description_title">Description</string>
-    <string name="description_text">Balance Widget TR is an open source application displaying the balance on Ticket Restaurant&#174; dietary tickets from Edenred Slovakia, s.r.o. The application displays the account balance in a simple widget.</string>
-    <string name="main_activity_description">This is a widget application!\nYou need to create a widget on your home screen in order to use this application.\nSelect the button below to learn how to create a widget.</string>
-    <string name="watch_tutorial">Watch tutorial</string>
+	<string name="app_name">Balance Widget TR</string>
+	<string name="app_company_name" translatable="false">RoHi</string>
+	<string name="app_url" translatable="false">"https://github.com/rhidasi/balance-widget-tr"</string>
+	<string name="app_copyright" translatable="false">Copyright &#169; 2018</string>
+	<string name="app_rate">Rate this app</string>
+	<string name="app_homepage">Homepage</string>
+	<string name="apache_license" translatable="false">Apache License, Version 2.0</string>
+	<string name="apache_license_url" translatable="false">http://www.apache.org/licenses/LICENSE-2.0</string>
+	<string name="libraries">Libraries</string>
+	<string name="okhttp" translatable="false">OkHttp</string>
+	<string name="okhttp_url" translatable="false">"https://github.com/square/okhttp"</string>
+	<string name="butterknife" translatable="false">Butter Knife</string>
+	<string name="butterknife_url" translatable="false">"http://jakewharton.github.io/butterknife"</string>
+	<string name="widget_text_loading" translatable="false">&#8230; &#8364;</string>
+	<string name="save_widget">Apply</string>
+	<string name="card_serial_hint">Serial number of the card</string>
+	<string name="enter_10_digits">Enter 10 digits</string>
+	<string name="pan_4_digits_hint">Last four digits of the card</string>
+	<string name="enter_4_digits">Enter 4 digits</string>
+	<string name="widget_text_error">Error</string>
+	<string name="settings">Settings</string>
+	<string name="dark_theme">Dark theme</string>
+	<string name="about">About</string>
+	<string name="license">License</string>
+	<string name="hint">Hint: single tap to update balance, double tap to configure settings</string>
+	<string name="disclaimer">Please note that the Balance Widget TR application is not an official software of Edenred Slovakia, s.r.o. Functionality in the future can not be guaranteed.</string>
+	<string name="description_title">Description</string>
+	<string name="description_text">Balance Widget TR is an open source application displaying the balance on Ticket Restaurant&#174; dietary tickets from Edenred Slovakia, s.r.o. The application displays the account balance in a simple widget.</string>
 </resources>

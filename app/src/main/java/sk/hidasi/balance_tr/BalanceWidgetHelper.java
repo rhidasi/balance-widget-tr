@@ -50,6 +50,7 @@ class BalanceWidgetHelper {
 	private static final String PREF_PREFIX_FOUR_DIGITS = "appwidget_four_digits_";
 	private static final String PREF_PREFIX_UPDATE_MINUTES = "appwidget_update_minutes_";
 	private static final String PREF_PREFIX_DARK_THEME = "appwidget_dark_theme_";
+	private static final String PREF_PREFIX_MILLIS = "appwidget_millis_";
 
 	public static void createHttpRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
 
@@ -71,7 +72,7 @@ class BalanceWidgetHelper {
 		}
 
 		final HttpUrl url = new HttpUrl.Builder()
-				.scheme("http")
+				.scheme("https")
 				.host("www.trkarta.sk")
 				.addPathSegment("balance")
 				.addQueryParameter("card_serial", serial)
@@ -84,22 +85,24 @@ class BalanceWidgetHelper {
 		final OkHttpClient client = new OkHttpClient.Builder()
 				.connectTimeout(10, TimeUnit.SECONDS)
 				.readTimeout(10, TimeUnit.SECONDS)
+				.retryOnConnectionFailure(false)
 				.build();
 
-		Log.d(TAG, "Sending request...");
+		Log.d(TAG, "Sending request..." + request.toString());
 		client.newCall(request).enqueue(new Callback() {
 
 			@Override
 			public void onFailure(final Call call, IOException e) {
 				Log.d(TAG, "Request failed");
-				// schedule next update
+				final String text = context.getString(R.string.widget_text_loading);
+				saveWidgetText(context, appWidgetId, text);
 				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, ON_FAILURE_RETRY_MINUTES);
 			}
 
 			@Override
 			public void onResponse(Call call, final Response response) throws IOException {
-					final String content = response.body().string();
-					Log.d(TAG, "Request response = " + content);
+				final String content = response.body().string();
+				Log.d(TAG, "Request response = " + content);
 				try {
 					final JSONObject json = new JSONObject(content);
 					final boolean resultOk = json.getBoolean("result");
@@ -113,6 +116,7 @@ class BalanceWidgetHelper {
 					final long updateInMinutes = loadWidgetUpdateMinutes(context, appWidgetId);
 					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInMinutes);
 				} catch (JSONException e) {
+					Log.d(TAG, "Parsing result failed");
 					final String text = context.getString(R.string.widget_text_loading);
 					saveWidgetText(context, appWidgetId, text);
 					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, ON_FAILURE_RETRY_MINUTES);
@@ -180,6 +184,18 @@ class BalanceWidgetHelper {
 		prefs.remove(PREF_PREFIX_TEXT + appWidgetId);
 		prefs.remove(PREF_PREFIX_SERIAL + appWidgetId);
 		prefs.remove(PREF_PREFIX_FOUR_DIGITS + appWidgetId);
+		prefs.apply();
+	}
+
+	static long loadWidgetClickMillis(final Context context, int appWidgetId) {
+		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+		return  prefs.getLong(PREF_PREFIX_MILLIS + appWidgetId, 0);
+	}
+
+	static void saveWidgetClickMillis(final Context context, int appWidgetId, final long millis) {
+		Log.d(TAG, "saveWidgetClickMillis(), appWidgetId=" + appWidgetId);
+		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+		prefs.putLong(PREF_PREFIX_MILLIS + appWidgetId, millis);
 		prefs.apply();
 	}
 }
