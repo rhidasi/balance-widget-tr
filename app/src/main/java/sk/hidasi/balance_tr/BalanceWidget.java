@@ -47,6 +47,7 @@ public class BalanceWidget extends AppWidgetProvider {
 
 		final String widgetText = BalanceWidgetHelper.loadWidgetText(context, appWidgetId);
 		final boolean darkTheme = BalanceWidgetHelper.loadWidgetDarkTheme(context, appWidgetId);
+		final boolean updateFailed = BalanceWidgetHelper.loadWidgetUpdateFailed(context, appWidgetId);
 
 		final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.balance_widget);
 		final Resources resources = context.getResources();
@@ -63,6 +64,7 @@ public class BalanceWidget extends AppWidgetProvider {
 			final Paint textPaint = new Paint();
 			textPaint.setStyle(Paint.Style.FILL);
 			textPaint.setColor(darkTheme ? Color.WHITE : Color.BLACK);
+			textPaint.setAlpha(updateFailed ? 192 : 255);
 			textPaint.setTextSize(resources.getDimension(R.dimen.widget_text_size));
 			textPaint.setTextAlign(Paint.Align.CENTER);
 

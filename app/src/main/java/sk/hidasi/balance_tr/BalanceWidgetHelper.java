@@ -20,6 +20,8 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -50,12 +52,14 @@ class BalanceWidgetHelper {
 	private static final String PREF_PREFIX_FOUR_DIGITS = "appwidget_four_digits_";
 	private static final String PREF_PREFIX_UPDATE_MINUTES = "appwidget_update_minutes_";
 	private static final String PREF_PREFIX_DARK_THEME = "appwidget_dark_theme_";
+	private static final String PREF_PREFIX_UPDATE_FAILED = "appwidget_update_failed_";
 	private static final String PREF_PREFIX_MILLIS = "appwidget_millis_";
 
 	public static void createHttpRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
 
 		final String serial = loadWidgetSerial(context, appWidgetId);
 		final String fourDigits = loadWidgetFourDigits(context, appWidgetId);
+		final long updateInMinutes = loadWidgetUpdateMinutes(context, appWidgetId);
 
 		if (serial == null || serial.length() != 10 || fourDigits == null || fourDigits.length() != 4) {
 			Log.e(TAG, "Invalid serial number or four digits");
@@ -69,6 +73,12 @@ class BalanceWidgetHelper {
 				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, 60);
 				return;
 			}
+		}
+
+		if (!testNetwork(context)) {
+			// no network connection, just schedule next update
+			BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInMinutes);
+			return;
 		}
 
 		final HttpUrl url = new HttpUrl.Builder()
@@ -88,14 +98,20 @@ class BalanceWidgetHelper {
 				.retryOnConnectionFailure(false)
 				.build();
 
+		final String oldText = loadWidgetText(context, appWidgetId);
+		final String text = context.getString(R.string.widget_text_loading);
+		saveWidgetText(context, appWidgetId, text);
+		saveWidgetUpdateFailed(context, appWidgetId, false);
+		BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, 0);
+
 		Log.d(TAG, "Sending request..." + request.toString());
 		client.newCall(request).enqueue(new Callback() {
 
 			@Override
 			public void onFailure(final Call call, IOException e) {
 				Log.d(TAG, "Request failed");
-				final String text = context.getString(R.string.widget_text_loading);
-				saveWidgetText(context, appWidgetId, text);
+				saveWidgetText(context, appWidgetId, oldText);
+				saveWidgetUpdateFailed(context, appWidgetId, true);
 				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, ON_FAILURE_RETRY_MINUTES);
 			}
 
@@ -113,16 +129,21 @@ class BalanceWidgetHelper {
 						text = context.getString(R.string.widget_text_error);
 					}
 					saveWidgetText(context, appWidgetId, text);
-					final long updateInMinutes = loadWidgetUpdateMinutes(context, appWidgetId);
 					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInMinutes);
 				} catch (JSONException e) {
 					Log.d(TAG, "Parsing result failed");
-					final String text = context.getString(R.string.widget_text_loading);
-					saveWidgetText(context, appWidgetId, text);
+					saveWidgetText(context, appWidgetId, oldText);
+					saveWidgetUpdateFailed(context, appWidgetId, true);
 					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, ON_FAILURE_RETRY_MINUTES);
 				}
 			}
 		});
+	}
+
+	static boolean testNetwork(final Context context) {
+		final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 	}
 
 	static boolean onOptionsItemSelected(final Activity activity, final MenuItem item) {
@@ -184,6 +205,22 @@ class BalanceWidgetHelper {
 		prefs.remove(PREF_PREFIX_TEXT + appWidgetId);
 		prefs.remove(PREF_PREFIX_SERIAL + appWidgetId);
 		prefs.remove(PREF_PREFIX_FOUR_DIGITS + appWidgetId);
+		prefs.remove(PREF_PREFIX_UPDATE_MINUTES + appWidgetId);
+		prefs.remove(PREF_PREFIX_DARK_THEME + appWidgetId);
+		prefs.remove(PREF_PREFIX_UPDATE_FAILED + appWidgetId);
+		prefs.remove(PREF_PREFIX_MILLIS + appWidgetId);
+		prefs.apply();
+	}
+
+	static boolean loadWidgetUpdateFailed(final Context context, int appWidgetId) {
+		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+		return  prefs.getBoolean(PREF_PREFIX_UPDATE_FAILED + appWidgetId, false);
+	}
+
+	static void saveWidgetUpdateFailed(final Context context, int appWidgetId, final boolean failed) {
+		Log.d(TAG, "saveWidgetUpdateFailed(), appWidgetId=" + appWidgetId);
+		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+		prefs.putBoolean(PREF_PREFIX_UPDATE_FAILED + appWidgetId, failed);
 		prefs.apply();
 	}
 
