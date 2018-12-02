@@ -27,6 +27,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -59,6 +60,7 @@ public class BalanceWidget extends AppWidgetProvider {
 		final Canvas canvas = new Canvas(bmp);
 		final int width = canvas.getWidth();
 		final int height = canvas.getHeight();
+		canvas.drawColor(darkTheme ? 0xBEFFFFFF : 0xE6FFFFFF, PorterDuff.Mode.DST_IN);
 
 		if (widgetText != null) {
 			final Paint textPaint = new Paint();
@@ -76,9 +78,7 @@ public class BalanceWidget extends AppWidgetProvider {
 			canvas.drawText(widgetText, xPos, yPos, textPaint);
 		}
 
-
 		views.setImageViewBitmap(R.id.imageView, bmp);
-		views.setInt(R.id.imageView, "setAlpha", darkTheme ? 190 : 230);
 
 		if (nextUpdateInMinutes > 0) {
 			final AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
