@@ -35,7 +35,7 @@ import android.widget.RemoteViews;
 
 /**
  * Implementation of App Widget functionality.
- * App Widget Configuration implemented in {@link BalanceWidgetConfigureActivity BalanceWidgetConfigureActivity}
+ * App Widget Configuration implemented in {@link ConfigureActivity ConfigureActivity}
  */
 public class BalanceWidget extends AppWidgetProvider {
 
@@ -151,7 +151,7 @@ public class BalanceWidget extends AppWidgetProvider {
 				BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId);
 			} else {
 				// double click, open settings
-				Intent configIntent = new Intent(context, BalanceWidgetConfigureActivity.class);
+				Intent configIntent = new Intent(context, ConfigureActivity.class);
 				configIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 				context.startActivity(configIntent);

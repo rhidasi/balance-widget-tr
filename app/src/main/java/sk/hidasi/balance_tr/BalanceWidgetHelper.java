@@ -39,7 +39,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Helper methods for the {@link BalanceWidget BalanceWidget} AppWidget and the {@link BalanceWidgetConfigureActivity} Activity.
+ * Helper methods for the {@link BalanceWidget BalanceWidget} AppWidget and the {@link ConfigureActivity} Activity.
  */
 class BalanceWidgetHelper {
 

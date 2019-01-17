@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-          package="sk.hidasi.balance_tr">
+    package="sk.hidasi.balance_tr">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,17 +13,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <receiver android:name=".BalanceWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/balance_widget_info" />
-        </receiver>
-        <activity
-            android:name=".BalanceWidgetConfigureActivity">
+        <activity android:name=".ConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -34,8 +23,18 @@
             android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="sk.hidasi.balance_tr.BalanceWidgetConfigureActivity"/>
+                android:value="sk.hidasi.balance_tr.ConfigureActivity"/>
         </activity>
+
+        <receiver android:name=".BalanceWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/balance_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

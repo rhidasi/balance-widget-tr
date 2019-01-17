@@ -33,7 +33,7 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.balance_widget_about);
+        setContentView(R.layout.activity_about);
         setExtraInformation();
     }
 

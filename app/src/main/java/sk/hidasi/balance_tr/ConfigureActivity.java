@@ -37,7 +37,7 @@ import butterknife.OnClick;
 /**
  * The configuration screen for the {@link BalanceWidget BalanceWidget} AppWidget.
  */
-public class BalanceWidgetConfigureActivity extends AppCompatActivity implements TextWatcher, SeekBar.OnSeekBarChangeListener {
+public class ConfigureActivity extends AppCompatActivity implements TextWatcher, SeekBar.OnSeekBarChangeListener {
 
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 	private static final int mUpdateMinutes[] = {1, 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440};
@@ -75,7 +75,7 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 		finish();
 	}
 
-	public BalanceWidgetConfigureActivity() {
+	public ConfigureActivity() {
 		super();
 	}
 
@@ -87,7 +87,7 @@ public class BalanceWidgetConfigureActivity extends AppCompatActivity implements
 		// out of the widget placement if the user presses the back button.
 		setResult(RESULT_CANCELED);
 
-		setContentView(R.layout.balance_widget_configure);
+		setContentView(R.layout.activity_configure);
 		ButterKnife.bind(this);
 
 		mSerialNumber.getEditText().addTextChangedListener(this);
