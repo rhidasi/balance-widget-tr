@@ -18,15 +18,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/about_activity_margin">
+            android:padding="@dimen/side_padding">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:padding="@dimen/about_layout_margin"
+                android:padding="@dimen/layout_margin"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/karta_edenred_preview" />
+                android:src="@drawable/card_edenred_preview" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,8 +74,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/about_activity_margin"
-        android:paddingRight="@dimen/about_activity_margin">
+        android:paddingLeft="@dimen/side_padding"
+        android:paddingRight="@dimen/side_padding">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,12 +83,8 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/about_layout_margin"
-                android:layout_marginTop="@dimen/about_layout_margin"
-                android:text="@string/description_title"
-                android:textStyle="bold|italic" />
+                style="@style/TitleText"
+                android:text="@string/description_title" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -101,12 +97,8 @@
                 android:text="@string/disclaimer" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/about_layout_margin"
-                android:layout_marginTop="@dimen/about_layout_margin"
-                android:text="@string/app_homepage"
-                android:textStyle="bold|italic" />
+                style="@style/TitleText"
+                android:text="@string/app_homepage" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -115,12 +107,8 @@
                 android:text="@string/app_url" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/about_layout_margin"
-                android:layout_marginTop="@dimen/about_layout_margin"
-                android:text="@string/license"
-                android:textStyle="bold|italic" />
+                style="@style/TitleText"
+                android:text="@string/license" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,12 +122,8 @@
                 android:text="@string/apache_license_url" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/about_layout_margin"
-                android:layout_marginTop="@dimen/about_layout_margin"
-                android:text="@string/libraries"
-                android:textStyle="bold|italic" />
+                style="@style/TitleText"
+                android:text="@string/libraries" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -163,13 +147,47 @@
                 android:autoLink="web"
                 android:text="@string/butterknife_url" />
 
+            <TextView
+                style="@style/TitleText"
+                android:text="@string/app_rate" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="@string/app_rate_text" />
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/about_layout_margin"
-                android:layout_marginTop="@dimen/about_layout_margin"
+                android:layout_gravity="end"
                 android:onClick="onRate"
                 android:text="@string/app_rate" />
+
+            <LinearLayout
+                android:id="@+id/restore_launcher_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TitleText"
+                        android:text="@string/restore_launcher_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/restore_launcher_icon_text" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:onClick="onRestoreLauncherIcon"
+                        android:text="@string/restore_launcher_icon" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

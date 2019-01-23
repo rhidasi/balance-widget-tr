@@ -16,12 +16,17 @@
 package sk.hidasi.balance_tr;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -31,6 +36,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -54,6 +61,10 @@ class BalanceWidgetHelper {
 	private static final String PREF_PREFIX_DARK_THEME = "appwidget_dark_theme_";
 	private static final String PREF_PREFIX_UPDATE_FAILED = "appwidget_update_failed_";
 	private static final String PREF_PREFIX_MILLIS = "appwidget_millis_";
+
+	private static final String WIDGET_ID = "widget_id";
+	private static final String CHANNEL_ID = "widget_channel";
+	private static NotificationChannel mNotificationChannel;
 
 	public static void createHttpRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
 
@@ -127,6 +138,7 @@ class BalanceWidgetHelper {
 						text = json.getString("balance") + "€";
 					} else {
 						text = context.getString(R.string.widget_text_error);
+						showErrorNotification(context, appWidgetId);
 					}
 					saveWidgetText(context, appWidgetId, text);
 					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInMinutes);
@@ -140,7 +152,39 @@ class BalanceWidgetHelper {
 		});
 	}
 
-	static boolean testNetwork(final Context context) {
+	private static void createNotificationChannel(final Context context) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mNotificationChannel == null) {
+			final CharSequence name = context.getString(R.string.notification_channel_name);
+			final String description = context.getString(R.string.notification_channel_description);
+			mNotificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+			mNotificationChannel.setDescription(description);
+			final NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+			notificationManager.createNotificationChannel(mNotificationChannel);
+		}
+	}
+
+	private static void showErrorNotification(final Context context, int widgetId) {
+		createNotificationChannel(context);
+
+		Intent intent = new Intent(context, BalanceWidget.class);
+		intent.setAction(BalanceWidget.ACTION_WIDGET_CONFIG);
+		intent.putExtra(WIDGET_ID, widgetId);
+		PendingIntent configIntent = PendingIntent.getBroadcast(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+				.setSmallIcon(R.drawable.ic_error_outline_black_24dp)
+				.setContentTitle(context.getString(R.string.notification_title))
+				.setContentText(context.getString(R.string.notification_text))
+				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+				.setContentIntent(configIntent)
+				.setAutoCancel(true)
+				.build();
+
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+		notificationManager.notify(widgetId, notification);
+	}
+
+	static private boolean testNetwork(final Context context) {
 		final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();

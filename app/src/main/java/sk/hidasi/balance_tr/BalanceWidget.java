@@ -39,8 +39,10 @@ import android.widget.RemoteViews;
  */
 public class BalanceWidget extends AppWidgetProvider {
 
-	private static final String ACTION_WIDGET_REFRESH = "sk.hidasi.action_widget_refresh";
-	private static final String ACTION_WIDGET_CLICK = "sk.hidasi.action_widget_click";
+	public static final String ACTION_WIDGET_REFRESH = "sk.hidasi.action_widget_refresh";
+	public static final String ACTION_WIDGET_CLICK = "sk.hidasi.action_widget_click";
+	public static final String ACTION_WIDGET_CONFIG = "sk.hidasi.action_widget_config";
+
 	private static final String WIDGET_ID = "widget_id";
 	private static final long DOUBLE_CLICK_DELAY = 250;
 
@@ -138,11 +140,12 @@ public class BalanceWidget extends AppWidgetProvider {
 		if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID)
 			return;
 
-		final String action = intent.getAction();
+		String action = intent.getAction();
 		if (ACTION_WIDGET_REFRESH.equals(action)) {
 			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 			BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId);
-		} else if (ACTION_WIDGET_CLICK.equals(action)) {
+		}
+		if (ACTION_WIDGET_CLICK.equals(action)) {
 			final long currentClickMillis = System.currentTimeMillis();
 			final long lastClickMillis = BalanceWidgetHelper.loadWidgetClickMillis(context, widgetId);
 			if (currentClickMillis - lastClickMillis > DOUBLE_CLICK_DELAY) {
@@ -151,12 +154,15 @@ public class BalanceWidget extends AppWidgetProvider {
 				BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId);
 			} else {
 				// double click, open settings
-				Intent configIntent = new Intent(context, ConfigureActivity.class);
-				configIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-				context.startActivity(configIntent);
+				action = ACTION_WIDGET_CONFIG;
 			}
 			BalanceWidgetHelper.saveWidgetClickMillis(context, widgetId, currentClickMillis);
+		}
+		if (ACTION_WIDGET_CONFIG.equals(action)) {
+			final Intent configIntent = new Intent(context, ConfigureActivity.class);
+			configIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+			context.startActivity(configIntent);
 		}
 	}
 }

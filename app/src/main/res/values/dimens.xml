@@ -3,8 +3,6 @@
 	<dimen name="widget_text_size">11sp</dimen>
 	<dimen name="configure_horizontal_margin">8dp</dimen>
 	<dimen name="widget_margin">4dp</dimen>
-	<dimen name="main_activity_margin">25dp</dimen>
-	<dimen name="main_layout_margin">15dp</dimen>
-	<dimen name="about_activity_margin">20dp</dimen>
-	<dimen name="about_layout_margin">10dp</dimen>
+	<dimen name="side_padding">20dp</dimen>
+	<dimen name="layout_margin">10dp</dimen>
 </resources>
