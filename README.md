@@ -20,4 +20,4 @@ Balance Widget TR is licensed under the Apache License Version 2.0
 
 We respect the privacy concerns of our users. The app doesn't have the required permissions to access private data. We do not store or share your personal information, period. 
 
-If there are any questions regarding this privacy policy you may contact us at [rohi.developer@gmail.com](rohi.developer@gmail.com)
+If there are any questions regarding this privacy policy you may contact us at [rohi.developer@gmail.com](mailto:rohi.developer@gmail.com)
