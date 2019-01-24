@@ -49,8 +49,7 @@
 			android:id="@+id/update_duration_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/configure_horizontal_margin"
-			android:textSize="16sp"/>
+			android:layout_marginTop="@dimen/configure_horizontal_margin"/>
 
 		<SeekBar
 			style="@style/Widget.AppCompat.SeekBar.Discrete"

@@ -62,7 +62,7 @@ public class BalanceWidget extends AppWidgetProvider {
 		final Canvas canvas = new Canvas(bmp);
 		final int width = canvas.getWidth();
 		final int height = canvas.getHeight();
-		canvas.drawColor(darkTheme ? 0xBEFFFFFF : 0xE6FFFFFF, PorterDuff.Mode.DST_IN);
+		canvas.drawColor(0xE6FFFFFF, PorterDuff.Mode.DST_IN);
 
 		if (widgetText != null) {
 			final Paint textPaint = new Paint();
