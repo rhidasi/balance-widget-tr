@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onViewInstructions(View view) {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("http://www.youtube.com/watch?v=IouBtavQ9w4"));
+        intent.setData(Uri.parse("http://www.youtube.com/watch?v=EZTyxPSoOeU"));
         intent.setPackage("com.google.android.youtube");
         startActivity(intent);
     }
