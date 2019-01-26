@@ -6,17 +6,17 @@
     <string name="app_url" translatable="false">"https://github.com/rhidasi/balance-widget-tr"</string>
     <string name="app_copyright" translatable="false">Copyright &#169; 2018</string>
     <string name="app_version" translatable="false">%1$s - %2$d (%3$s-%4$d)</string>
-    <string name="app_rate">Rate this app</string>
-    <string name="app_rate_text">Please support this application with good rating.</string>
-    <string name="app_homepage">Homepage</string>
     <string name="apache_license" translatable="false">Apache License, Version 2.0</string>
     <string name="apache_license_url" translatable="false">http://www.apache.org/licenses/LICENSE-2.0</string>
-    <string name="libraries">Libraries</string>
     <string name="okhttp" translatable="false">OkHttp</string>
     <string name="okhttp_url" translatable="false">"https://github.com/square/okhttp"</string>
     <string name="butterknife" translatable="false">Butter Knife</string>
     <string name="butterknife_url" translatable="false">"http://jakewharton.github.io/butterknife"</string>
     <string name="widget_text_loading" translatable="false">&#8230; &#8364;</string>
+    <string name="app_rate">Rate this app</string>
+    <string name="app_rate_text">Please support this application with good rating.</string>
+    <string name="app_homepage">Homepage</string>
+    <string name="libraries">Libraries</string>
     <string name="save_widget">Apply</string>
     <string name="card_serial_hint">Serial number of the card</string>
     <string name="enter_10_digits">Enter 10 digits</string>
@@ -27,20 +27,20 @@
     <string name="about">About</string>
     <string name="license">License</string>
     <string name="hint">Hint: single tap to update balance, double tap to configure settings</string>
-    <string name="disclaimer">Please note that the &appname; application is not an official software of Edenred Slovakia, s.r.o. Functionality in the future can not be guaranteed.</string>
+    <string name="disclaimer">Please note that the &appname; application is not an official software of Edenred Slovakia, s.r.o. Functionality in the future cannot be guaranteed.</string>
     <string name="description_title">Description</string>
     <string name="description_text">&appname; is an open source application displaying the balance on Ticket Restaurant&#174; dietary tickets from Edenred Slovakia, s.r.o. The application displays the account balance in a simple widget.</string>
     <string name="how_to_create">How to create a widget</string>
     <string name="how_to_create_text">View instructions how to create a "widget" on your home screen (the process may vary depending on the manufacturer and the operating system version).</string>
     <string name="install_official_app">Install official application</string>
-    <string name="install_official_app_text">If you don\'t need a widget, install the official application of Edenred Slovakia, s.r.o.</string>
+    <string name="install_official_app_text">Don\'t need a widget? Install the official application of Edenred Slovakia, s.r.o.</string>
     <string name="hide_launcher_icon">Hide launcher icon</string>
-    <string name="hide_launcher_icon_text">If you don\'t need an application icon, you can hide it.</string>
-    <string name="hide_launcher_icon_warning">Are you sure you want to hide the application icon and use only widget?</string>
+    <string name="hide_launcher_icon_text">Don\'t need an application icon anymore? You can hide it.</string>
+    <string name="hide_launcher_icon_warning">Are you sure you want to hide the application icon? You can still use the widget. Recommended only for advanced users.</string>
     <string name="notification_channel_name">&appname; notification</string>
     <string name="notification_channel_description">This notification appears if the card input data is invalid.</string>
     <string name="notification_title">&appname; error</string>
-    <string name="notification_text">Check the card input data</string>
+    <string name="notification_text">Failed to get the balance on your card.\nPlease check the card numbers.</string>
     <string name="restore_launcher_icon">Restore launcher icon</string>
     <string name="restore_launcher_icon_text">The launcher icon of this application is hidden.</string>
     <string name="restore_launcher_icon_warning">Are you sure you want to restore the application icon?</string>

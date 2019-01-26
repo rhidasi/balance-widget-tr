@@ -22,15 +22,15 @@
     <string name="how_to_create">Ako vytvoriť widget</string>
     <string name="how_to_create_text">Pozrite si návod ako vytvoriť "widget" na domácej obrazovke (postup môže byť odlišný v závislosti od výrobcu a verzie operačného systému).</string>
     <string name="install_official_app">Nainštalovať oficiálnu aplikáciu</string>
-    <string name="install_official_app_text">Ak nehladáte widget nainštalujte si oficiálnu aplikáciu spoločnosti Edenred Slovakia, s.r.o.</string>
+    <string name="install_official_app_text">Nehľadáte widget? Nainštalujte si oficiálnu aplikáciu spoločnosti Edenred Slovakia, s.r.o.</string>
     <string name="hide_launcher_icon">Skryť ikonu aplikácie</string>
-    <string name="hide_launcher_icon_text">Ak nepotrebujete aby sa zobrazovala ikona aplikácie môžete ju skryť.</string>
-    <string name="hide_launcher_icon_warning">Naozaj chcete skryť ikonu aplikácie a používať len widget?</string>
+    <string name="hide_launcher_icon_text">Nepotrebujete aby sa už zobrazovala ikona aplikácie? Môžete ju skryť.</string>
+    <string name="hide_launcher_icon_warning">Naozaj chcete skryť ikonu aplikácie? Widget môžete používať ďalej. Odporúčané len pre skúsených užívateľov.</string>
     <string name="notification_channel_name">&appname; notifikácia</string>
-    <string name="notification_channel_description">Táto notigikácia sa zobrazuje v prípade že sú vstupné údaje karty chybné.</string>
+    <string name="notification_channel_description">Táto notifikácia sa zobrazuje v prípade že sú vstupné údaje karty chybné.</string>
     <string name="notification_title">&appname; chyba</string>
-    <string name="notification_text">Skontrolujte vtupné údaje karty</string>
+    <string name="notification_text">Nepodarilo sa zistiť zostatok na Vašej karte.\nProsím, skontrolujte čísla karty.</string>
     <string name="restore_launcher_icon">Obnoviť ikonu aplikácie</string>
-    <string name="restore_launcher_icon_text">Ikona plikácie je skrytá.</string>
-    <string name="restore_launcher_icon_warning">Naozaj chcete onoviť ikonu aplikácie?</string>
+    <string name="restore_launcher_icon_text">Ikona aplikácie je skrytá.</string>
+    <string name="restore_launcher_icon_warning">Naozaj chcete obnoviť ikonu aplikácie?</string>
 </resources>

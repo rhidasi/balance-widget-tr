@@ -170,11 +170,13 @@ class BalanceWidgetHelper {
 		intent.setAction(BalanceWidget.ACTION_WIDGET_CONFIG);
 		intent.putExtra(WIDGET_ID, widgetId);
 		PendingIntent configIntent = PendingIntent.getBroadcast(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		NotificationCompat.Style bigStyle = new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notification_text));
 
 		Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
 				.setSmallIcon(R.drawable.ic_error_outline_black_24dp)
 				.setContentTitle(context.getString(R.string.notification_title))
 				.setContentText(context.getString(R.string.notification_text))
+				.setStyle(bigStyle)
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setContentIntent(configIntent)
 				.setAutoCancel(true)
