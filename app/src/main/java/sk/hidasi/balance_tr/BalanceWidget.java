@@ -58,7 +58,7 @@ public class BalanceWidget extends AppWidgetProvider {
 		final BitmapFactory.Options opt = new BitmapFactory.Options();
 		opt.inMutable = true;
 		opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-		final Bitmap bmp = BitmapFactory.decodeResource(resources, darkTheme ? R.mipmap.ic_widget_dark : R.mipmap.ic_widget, opt);
+		final Bitmap bmp = BitmapFactory.decodeResource(resources, darkTheme ? R.drawable.ic_widget_dark : R.drawable.ic_widget, opt);
 		final Canvas canvas = new Canvas(bmp);
 		final int width = canvas.getWidth();
 		final int height = canvas.getHeight();
@@ -69,7 +69,7 @@ public class BalanceWidget extends AppWidgetProvider {
 			textPaint.setStyle(Paint.Style.FILL);
 			textPaint.setColor(darkTheme ? Color.WHITE : Color.BLACK);
 			textPaint.setAlpha(updateFailed ? 192 : 255);
-			textPaint.setTextSize(resources.getDimension(R.dimen.widget_text_size));
+			textPaint.setTextSize(height * 0.23f);
 			textPaint.setTextAlign(Paint.Align.CENTER);
 
 			textPaint.setAntiAlias(true);
