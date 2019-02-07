@@ -44,4 +44,6 @@
     <string name="restore_launcher_icon">Restore launcher icon</string>
     <string name="restore_launcher_icon_text">The launcher icon of this application is hidden.</string>
     <string name="restore_launcher_icon_warning">Are you sure you want to restore the application icon?</string>
+    <string name="no_app_to_play_video">No application to play video</string>
+    <string name="google_play_error">Google Play application error</string>
 </resources>

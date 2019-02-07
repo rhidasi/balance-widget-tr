@@ -33,4 +33,6 @@
     <string name="restore_launcher_icon">Obnoviť ikonu aplikácie</string>
     <string name="restore_launcher_icon_text">Ikona aplikácie je skrytá.</string>
     <string name="restore_launcher_icon_warning">Naozaj chcete obnoviť ikonu aplikácie?</string>
+    <string name="no_app_to_play_video">Žiadna aplikácia na prehrávanie videa</string>
+    <string name="google_play_error">Chyba aplikácie Obchod Play</string>
 </resources>

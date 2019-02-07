@@ -18,12 +18,14 @@ package sk.hidasi.balance_tr;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,17 +36,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onViewInstructions(View view) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("http://www.youtube.com/watch?v=EZTyxPSoOeU"));
-        intent.setPackage("com.google.android.youtube");
-        startActivity(intent);
+        try {
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("http://www.youtube.com/watch?v=EZTyxPSoOeU"));
+            intent.setPackage("com.google.android.youtube");
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.no_app_to_play_video, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onInstallOfficialApp(View view) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=sk.edenred.trkartapro"));
-        intent.setPackage("com.android.vending");
-        startActivity(intent);
+        try {
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=sk.edenred.trkartapro"));
+            intent.setPackage("com.android.vending");
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.google_play_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onHideLauncherIcon(View view) {
