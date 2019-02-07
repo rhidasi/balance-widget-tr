@@ -66,7 +66,7 @@ public class ConfigureActivity extends AppCompatActivity implements TextWatcher,
 
 		// It is the responsibility of the configuration activity to update the app widget
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-		BalanceWidgetHelper.createHttpRequest(this, appWidgetManager, mAppWidgetId);
+		BalanceWidgetHelper.createHttpRequest(this, appWidgetManager, mAppWidgetId, false);
 
 		// Make sure we pass back the original appWidgetId
 		Intent resultValue = new Intent();

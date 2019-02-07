@@ -15,6 +15,7 @@
  */
 package sk.hidasi.balance_tr;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -27,8 +28,10 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +69,7 @@ class BalanceWidgetHelper {
 	private static final String CHANNEL_ID = "widget_channel";
 	private static NotificationChannel mNotificationChannel;
 
-	public static void createHttpRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
+	public static void createHttpRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId, final boolean fromUser) {
 
 		final String serial = loadWidgetSerial(context, appWidgetId);
 		final String fourDigits = loadWidgetFourDigits(context, appWidgetId);
@@ -89,6 +92,14 @@ class BalanceWidgetHelper {
 		if (!testNetwork(context)) {
 			// no network connection, just schedule next update
 			BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInMinutes);
+			if (fromUser) {
+				// notify user about the reason we will not update the widget
+				if (!isIgnoringBatteryOptimizations(context)) {
+					Toast.makeText(context, R.string.turn_off_battery_optimization, Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(context, R.string.no_connection, Toast.LENGTH_SHORT).show();
+				}
+			}
 			return;
 		}
 
@@ -150,6 +161,15 @@ class BalanceWidgetHelper {
 				}
 			}
 		});
+	}
+
+	private static boolean isIgnoringBatteryOptimizations(final Context context)
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			return pm == null || !pm.isPowerSaveMode() || pm.isIgnoringBatteryOptimizations(context.getPackageName());
+		}
+		return true;
 	}
 
 	private static void createNotificationChannel(final Context context) {

@@ -46,4 +46,6 @@
     <string name="restore_launcher_icon_warning">Are you sure you want to restore the application icon?</string>
     <string name="no_app_to_play_video">No application to play video</string>
     <string name="google_play_error">Google Play application error</string>
+    <string name="turn_off_battery_optimization">Cannot update widget when Battery Saver is enabled. Turn off battery optimization for this application.</string>
+    <string name="no_connection">No internet connection</string>
 </resources>

@@ -29,6 +29,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import android.widget.RemoteViews;
@@ -45,6 +46,8 @@ public class BalanceWidget extends AppWidgetProvider {
 
 	private static final String WIDGET_ID = "widget_id";
 	private static final long DOUBLE_CLICK_DELAY = 250;
+
+	private Handler mHandler = new Handler();
 
 	public static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, int appWidgetId, long nextUpdateInMinutes) {
 
@@ -110,7 +113,7 @@ public class BalanceWidget extends AppWidgetProvider {
 		// There may be multiple widgets active, so update all of them
 		for (int appWidgetId : appWidgetIds) {
 			updateAppWidget(context, appWidgetManager, appWidgetId, 0);
-			BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, appWidgetId);
+			BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, appWidgetId, false);
 		}
 	}
 
@@ -143,15 +146,18 @@ public class BalanceWidget extends AppWidgetProvider {
 		String action = intent.getAction();
 		if (ACTION_WIDGET_REFRESH.equals(action)) {
 			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-			BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId);
+			BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId, false);
 		}
 		if (ACTION_WIDGET_CLICK.equals(action)) {
 			final long currentClickMillis = System.currentTimeMillis();
 			final long lastClickMillis = BalanceWidgetHelper.loadWidgetClickMillis(context, widgetId);
+			mHandler.removeCallbacksAndMessages(null);
 			if (currentClickMillis - lastClickMillis > DOUBLE_CLICK_DELAY) {
-				// first click refresh
-				AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-				BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId);
+				mHandler.postDelayed(() -> {
+					// first click refresh
+					AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+					BalanceWidgetHelper.createHttpRequest(context, appWidgetManager, widgetId, true);
+				}, DOUBLE_CLICK_DELAY);
 			} else {
 				// double click, open settings
 				action = ACTION_WIDGET_CONFIG;
