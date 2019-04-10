@@ -35,7 +35,7 @@
     <string name="install_official_app">Install official application</string>
     <string name="install_official_app_text">Don\'t need a widget? Install the official application of Edenred Slovakia s.r.o.</string>
     <string name="hide_launcher_icon">Hide launcher icon</string>
-    <string name="hide_launcher_icon_text">Don\'t need an application icon anymore? You can hide it. You can still use the widget.</string>
+    <string name="hide_launcher_icon_text">Don\'t need an application icon anymore? You can hide it and still use the widget.</string>
     <string name="hide_launcher_icon_warning">Are you sure you want to hide the application icon? Recommended only for advanced users.</string>
     <string name="notification_channel_name">&appname; notification</string>
     <string name="notification_channel_description">This notification appears if the card input data is invalid.</string>

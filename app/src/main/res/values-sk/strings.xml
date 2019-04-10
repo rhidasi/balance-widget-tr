@@ -24,7 +24,7 @@
     <string name="install_official_app">Nainštalovať oficiálnu aplikáciu</string>
     <string name="install_official_app_text">Nehľadáte miniaplikáciu? Nainštalujte si oficiálnu aplikáciu spoločnosti Edenred Slovakia s.r.o.</string>
     <string name="hide_launcher_icon">Skryť ikonu aplikácie</string>
-    <string name="hide_launcher_icon_text">Nepotrebujete aby sa už zobrazovala ikona aplikácie? Môžete ju skryť. Miniaplikáciu môžete používať ďalej.</string>
+    <string name="hide_launcher_icon_text">Nepotrebujete aby sa už zobrazovala ikona aplikácie? Môžete ju skryť a miniaplikáciu používať ďalej.</string>
     <string name="hide_launcher_icon_warning">Naozaj chcete skryť ikonu aplikácie? Odporúčané len pre skúsených užívateľov.</string>
     <string name="notification_channel_name">&appname; notifikácia</string>
     <string name="notification_channel_description">Táto notifikácia sa zobrazuje v prípade že sú vstupné údaje karty chybné.</string>
