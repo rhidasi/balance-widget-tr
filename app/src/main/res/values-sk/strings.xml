@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [<!ENTITY appname "Zostatok Widget TR">]>
+<!DOCTYPE resources [<!ENTITY appname "Zostatok TR">]>
 <resources>
     <string name="app_name">&appname;</string>
     <string name="app_homepage">Domovská stránka</string>
@@ -18,14 +18,14 @@
     <string name="app_rate_text">Prosím podporte aplikáciu dobrým hodnotením.</string>
     <string name="license">Licencia</string>
     <string name="description_title">Popis</string>
-    <string name="description_text">&appname; je open source aplikácia slúžiaca na zobrazovanie zostatku na stravovacích kartách Ticket Restaurant&#174; spoločnosti Edenred Slovakia, s.r.o. Aplikácia zobrazuje zostatok na účte v jednoduchom widgete.</string>
-    <string name="how_to_create">Ako vytvoriť widget</string>
-    <string name="how_to_create_text">Pozrite si návod ako vytvoriť "widget" na domácej obrazovke (postup môže byť odlišný v závislosti od výrobcu a verzie operačného systému).</string>
+    <string name="description_text">&appname; je open source aplikácia slúžiaca na zobrazovanie zostatku stravovacích kariet Ticket Restaurant&#174; spoločnosti Edenred Slovakia s.r.o.\nAplikácia zobrazuje zostatok na účte v jednoduchej miniaplikácii.</string>
+    <string name="how_to_create">Ako vytvoriť miniaplikáciu</string>
+    <string name="how_to_create_text">Pozrite si návod ako vytvoriť "miniaplikáciu" na domácej obrazovke (postup môže byť odlišný v závislosti od výrobcu a verzie operačného systému).</string>
     <string name="install_official_app">Nainštalovať oficiálnu aplikáciu</string>
-    <string name="install_official_app_text">Nehľadáte widget? Nainštalujte si oficiálnu aplikáciu spoločnosti Edenred Slovakia, s.r.o.</string>
+    <string name="install_official_app_text">Nehľadáte miniaplikáciu? Nainštalujte si oficiálnu aplikáciu spoločnosti Edenred Slovakia s.r.o.</string>
     <string name="hide_launcher_icon">Skryť ikonu aplikácie</string>
-    <string name="hide_launcher_icon_text">Nepotrebujete aby sa už zobrazovala ikona aplikácie? Môžete ju skryť.</string>
-    <string name="hide_launcher_icon_warning">Naozaj chcete skryť ikonu aplikácie? Widget môžete používať ďalej. Odporúčané len pre skúsených užívateľov.</string>
+    <string name="hide_launcher_icon_text">Nepotrebujete aby sa už zobrazovala ikona aplikácie? Môžete ju skryť. Miniaplikáciu môžete používať ďalej.</string>
+    <string name="hide_launcher_icon_warning">Naozaj chcete skryť ikonu aplikácie? Odporúčané len pre skúsených užívateľov.</string>
     <string name="notification_channel_name">&appname; notifikácia</string>
     <string name="notification_channel_description">Táto notifikácia sa zobrazuje v prípade že sú vstupné údaje karty chybné.</string>
     <string name="notification_title">&appname; chyba</string>
@@ -35,6 +35,6 @@
     <string name="restore_launcher_icon_warning">Naozaj chcete obnoviť ikonu aplikácie?</string>
     <string name="no_app_to_play_video">Žiadna aplikácia na prehrávanie videa</string>
     <string name="google_play_error">Chyba aplikácie Obchod Play</string>
-    <string name="turn_off_battery_optimization">Widget nemožno aktualizovať, keď je zapnutý Šetrič batérie. Vypnite optimalizácie batérie pre túto aplikáciu.</string>
+    <string name="turn_off_battery_optimization">Miniaplikáciu nemožno aktualizovať keď je zapnutý Šetrič batérie. Vypnite optimalizácie batérie pre túto aplikáciu.</string>
     <string name="no_connection">Žiadne internetové pripojenie.</string>
 </resources>
