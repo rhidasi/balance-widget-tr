@@ -47,7 +47,7 @@ public class BalanceWidget extends AppWidgetProvider {
 	private static final String WIDGET_ID = "widget_id";
 	private static final long DOUBLE_CLICK_DELAY = 250;
 
-	private Handler mHandler = new Handler();
+	private final Handler mHandler = new Handler();
 
 	public static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, int appWidgetId, long nextUpdateInMinutes) {
 

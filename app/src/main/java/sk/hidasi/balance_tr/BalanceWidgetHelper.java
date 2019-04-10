@@ -15,7 +15,6 @@
  */
 package sk.hidasi.balance_tr;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
