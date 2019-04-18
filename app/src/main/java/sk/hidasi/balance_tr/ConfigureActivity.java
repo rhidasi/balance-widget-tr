@@ -40,7 +40,7 @@ import butterknife.OnClick;
 public class ConfigureActivity extends AppCompatActivity implements TextWatcher, SeekBar.OnSeekBarChangeListener {
 
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-	private static final int mUpdateMinutes[] = {1, 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440};
+	private static final int[] mUpdateMinutes = {1, 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440};
 
 	@BindView(R.id.appwidget_card_serial)
 	TextInputLayout mSerialNumber;
