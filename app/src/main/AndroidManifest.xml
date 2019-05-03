@@ -27,11 +27,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AboutActivity"
-            android:launchMode="singleTask">
+            android:name=".AboutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="sk.hidasi.balance_tr.ConfigureActivity"/>
+                android:value=".ConfigureActivity"/>
         </activity>
 
         <receiver android:name=".BalanceWidget">

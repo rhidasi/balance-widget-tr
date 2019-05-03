@@ -24,12 +24,10 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.NavUtils;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -65,15 +63,6 @@ public class AboutActivity extends AppCompatActivity {
         mPackageName.setText(BuildConfig.APPLICATION_ID);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        }
-        return false;
-    }
-
     public void onRate(@NonNull View view) {
         String url = "market://details?id=" + BuildConfig.APPLICATION_ID;
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -95,5 +84,11 @@ public class AboutActivity extends AppCompatActivity {
         });
         dlgAlert.setNegativeButton(android.R.string.no, null);
         dlgAlert.create().show();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 }
