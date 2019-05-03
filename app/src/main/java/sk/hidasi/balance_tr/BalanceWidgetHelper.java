@@ -46,6 +46,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Helper methods for the {@link BalanceWidget BalanceWidget} AppWidget and the {@link ConfigureActivity} Activity.
@@ -138,7 +139,8 @@ class BalanceWidgetHelper {
 
 			@Override
 			public void onResponse(Call call, final Response response) throws IOException {
-				final String content = response.body().string();
+				final ResponseBody responseBody = response.body();
+				final String content = responseBody == null ? null : responseBody.string();
 				Log.d(TAG, "Request response = " + content);
 				try {
 					final JSONObject json = new JSONObject(content);
