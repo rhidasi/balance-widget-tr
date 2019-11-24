@@ -29,7 +29,7 @@
     <string name="notification_channel_name">&appname; notifikácia</string>
     <string name="notification_channel_description">Táto notifikácia sa zobrazuje v prípade že sú vstupné údaje karty chybné.</string>
     <string name="notification_title">&appname; chyba</string>
-    <string name="notification_text">Nepodarilo sa zistiť zostatok na Vašej karte.\nProsím, skontrolujte čísla karty alebo to skúste neskôr.</string>
+    <string name="notification_text">Nepodarilo sa zistiť zostatok na Vašej karte.\nProsím, skontrolujte čísla karty a platnosť karty alebo to skúste neskôr.</string>
     <string name="restore_launcher_icon">Obnoviť ikonu aplikácie</string>
     <string name="restore_launcher_icon_text">Ikona aplikácie je skrytá.</string>
     <string name="restore_launcher_icon_warning">Naozaj chcete obnoviť ikonu aplikácie?</string>

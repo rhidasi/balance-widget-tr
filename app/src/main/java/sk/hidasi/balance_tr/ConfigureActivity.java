@@ -19,6 +19,8 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -116,7 +118,7 @@ public class ConfigureActivity extends AppCompatActivity implements TextWatcher,
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		return BalanceWidgetHelper.onOptionsItemSelected(this, item);
 	}
 

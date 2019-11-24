@@ -40,7 +40,7 @@
     <string name="notification_channel_name">&appname; notification</string>
     <string name="notification_channel_description">This notification appears if the card input data is invalid.</string>
     <string name="notification_title">&appname; error</string>
-    <string name="notification_text">Failed to get the balance on your card.\nPlease check the card numbers or try again later.</string>
+    <string name="notification_text">Failed to get the balance on your card.\nPlease check the card numbers and the card validity or try again later.</string>
     <string name="restore_launcher_icon">Restore launcher icon</string>
     <string name="restore_launcher_icon_text">The launcher icon of this application is hidden.</string>
     <string name="restore_launcher_icon_warning">Are you sure you want to restore the application icon?</string>
