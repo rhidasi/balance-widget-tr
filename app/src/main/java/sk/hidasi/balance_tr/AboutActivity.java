@@ -25,28 +25,21 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import sk.hidasi.balance_tr.databinding.ActivityAboutBinding;
 
 public class AboutActivity extends AppCompatActivity {
 
-    @BindView(R.id.about_version_info)
-    TextView mVersionInfo;
-    @BindView(R.id.about_package_name)
-    TextView mPackageName;
-    @BindView(R.id.restore_launcher_icon)
-    LinearLayout mRestoreLauncherIcon;
+    private ActivityAboutBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
-        ButterKnife.bind(this);
+        mBinding = ActivityAboutBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
         setExtraInformation();
 
@@ -54,13 +47,13 @@ public class AboutActivity extends AppCompatActivity {
         final ComponentName componentName = new ComponentName(this, MainActivity.class);
         final boolean iconDisabled = pm.getComponentEnabledSetting(componentName) == PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
         if (iconDisabled) {
-            mRestoreLauncherIcon.setVisibility(View.VISIBLE);
+            mBinding.restoreLauncherIcon.setVisibility(View.VISIBLE);
         }
     }
 
     private void setExtraInformation() {
-        mVersionInfo.setText(getString(R.string.app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, Build.VERSION.RELEASE, Build.VERSION.SDK_INT));
-        mPackageName.setText(BuildConfig.APPLICATION_ID);
+        mBinding.versionInfo.setText(getString(R.string.app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, Build.VERSION.RELEASE, Build.VERSION.SDK_INT));
+        mBinding.packageName.setText(BuildConfig.APPLICATION_ID);
     }
 
     public void onRate(@NonNull View view) {

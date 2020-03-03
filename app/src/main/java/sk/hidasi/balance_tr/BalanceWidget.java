@@ -32,6 +32,8 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.SystemClock;
 import androidx.annotation.NonNull;
+
+import android.util.Log;
 import android.widget.RemoteViews;
 
 /**
@@ -39,6 +41,8 @@ import android.widget.RemoteViews;
  * App Widget Configuration implemented in {@link ConfigureActivity ConfigureActivity}
  */
 public class BalanceWidget extends AppWidgetProvider {
+
+	private static final String TAG = BalanceWidget.class.getSimpleName();
 
 	public static final String ACTION_WIDGET_REFRESH = "sk.hidasi.action_widget_refresh";
 	public static final String ACTION_WIDGET_CLICK = "sk.hidasi.action_widget_click";
@@ -49,7 +53,7 @@ public class BalanceWidget extends AppWidgetProvider {
 
 	private final Handler mHandler = new Handler();
 
-	public static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, int appWidgetId, long nextUpdateInMinutes) {
+	public static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager, int appWidgetId, long nextUpdateInSeconds) {
 
 		final String widgetText = BalanceWidgetHelper.loadWidgetText(context, appWidgetId);
 		final boolean darkTheme = BalanceWidgetHelper.loadWidgetDarkTheme(context, appWidgetId);
@@ -85,12 +89,16 @@ public class BalanceWidget extends AppWidgetProvider {
 
 		views.setImageViewBitmap(R.id.imageView, bmp);
 
-		if (nextUpdateInMinutes > 0) {
+		if (nextUpdateInSeconds > 0) {
 			final AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-			final long triggerTime = SystemClock.elapsedRealtime() + nextUpdateInMinutes * 60 * 1000;
-			final PendingIntent refreshIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_REFRESH);
-			alarm.cancel(refreshIntent);
-			alarm.set(AlarmManager.ELAPSED_REALTIME, triggerTime, refreshIntent);
+			if (alarm != null) {
+				final long triggerTime = SystemClock.elapsedRealtime() + nextUpdateInSeconds * 60 * 1000;
+				final PendingIntent refreshIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_REFRESH);
+				alarm.cancel(refreshIntent);
+				alarm.set(AlarmManager.ELAPSED_REALTIME, triggerTime, refreshIntent);
+			} else {
+				Log.e(TAG, "Could not get AlarmManager system service.");
+			}
 		}
 
 		final PendingIntent settingsIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_CLICK);

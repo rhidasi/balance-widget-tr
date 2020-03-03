@@ -18,7 +18,6 @@ package sk.hidasi.balance_tr;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,43 +26,31 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.Switch;
-import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import java.util.Objects;
+
+import sk.hidasi.balance_tr.databinding.ActivityConfigureBinding;
 
 /**
  * The configuration screen for the {@link BalanceWidget BalanceWidget} AppWidget.
  */
-public class ConfigureActivity extends AppCompatActivity implements TextWatcher, SeekBar.OnSeekBarChangeListener {
+public class ConfigureActivity extends AppCompatActivity implements TextWatcher, SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 	private static final int[] mUpdateMinutes = {1, 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440};
 
-	@BindView(R.id.appwidget_card_serial)
-	TextInputLayout mSerialNumber;
-	@BindView(R.id.appwidget_pan_4_digits)
-	TextInputLayout mFourDigits;
-	@BindView(R.id.update_duration_seekbar)
-	SeekBar mDurationSeekBar;
-	@BindView(R.id.update_duration_text)
-	TextView mDurationText;
-	@BindView(R.id.dark_theme)
-	Switch mDarkTheme;
-	@BindView(R.id.save_button)
-	Button mAddButton;
+	private ActivityConfigureBinding mBinding;
 
-	@OnClick(R.id.save_button)
-	public void saveButton() {
+	@Override
+	public void onClick(View view) {
 		// When the button is clicked, store the string locally
-		final String serial = mSerialNumber.getEditText().getText().toString();
-		final String fourDigits = mFourDigits.getEditText().getText().toString();
-		final int updateDuration = progressToMinutes(mDurationSeekBar.getProgress());
-		final boolean darkTheme = mDarkTheme.isChecked();
+		final String serial = Objects.requireNonNull(mBinding.serialNumber.getEditText()).getText().toString();
+		final String fourDigits = Objects.requireNonNull(mBinding.fourDigits.getEditText()).getText().toString();
+		final int updateDuration = progressToMinutes(mBinding.durationSeekBar.getProgress());
+		final boolean darkTheme = mBinding.darkTheme.isChecked();
 		BalanceWidgetHelper.saveWidgetPrefs(this, mAppWidgetId, serial, fourDigits, updateDuration, darkTheme);
 
 		// It is the responsibility of the configuration activity to update the app widget
@@ -89,12 +76,13 @@ public class ConfigureActivity extends AppCompatActivity implements TextWatcher,
 		// out of the widget placement if the user presses the back button.
 		setResult(RESULT_CANCELED);
 
-		setContentView(R.layout.activity_configure);
-		ButterKnife.bind(this);
+		mBinding = ActivityConfigureBinding.inflate(getLayoutInflater());
+		setContentView(mBinding.getRoot());
 
-		mSerialNumber.getEditText().addTextChangedListener(this);
-		mFourDigits.getEditText().addTextChangedListener(this);
-		mDurationSeekBar.setOnSeekBarChangeListener(this);
+		Objects.requireNonNull(mBinding.serialNumber.getEditText()).addTextChangedListener(this);
+		Objects.requireNonNull(mBinding.fourDigits.getEditText()).addTextChangedListener(this);
+		mBinding.durationSeekBar.setOnSeekBarChangeListener(this);
+		mBinding.addButton.setOnClickListener(this);
 
 		// Find the widget id from the intent.
 		Bundle extras = getIntent().getExtras();
@@ -123,20 +111,19 @@ public class ConfigureActivity extends AppCompatActivity implements TextWatcher,
 	}
 
 	private void loadStoredValues() {
-
 		final String serial = BalanceWidgetHelper.loadWidgetSerial(this, mAppWidgetId);
-		mSerialNumber.getEditText().setText(serial);
+		Objects.requireNonNull(mBinding.serialNumber.getEditText()).setText(serial);
 		final String four = BalanceWidgetHelper.loadWidgetFourDigits(this, mAppWidgetId);
-		mFourDigits.getEditText().setText(four);
+		Objects.requireNonNull(mBinding.fourDigits.getEditText()).setText(four);
 		final int minutes = BalanceWidgetHelper.loadWidgetUpdateMinutes(this, mAppWidgetId);
-		final int oldProgress = mDurationSeekBar.getProgress();
-		mDurationSeekBar.setProgress(minutesToProgress(minutes));
-		if (oldProgress == mDurationSeekBar.getProgress()) {
+		final int oldProgress = mBinding.durationSeekBar.getProgress();
+		mBinding.durationSeekBar.setProgress(minutesToProgress(minutes));
+		if (oldProgress == mBinding.durationSeekBar.getProgress()) {
 			// trigger onProgressChange explicitly
-			onProgressChanged(mDurationSeekBar, oldProgress, false);
+			onProgressChanged(mBinding.durationSeekBar, oldProgress, false);
 		}
 		final boolean darkTheme = BalanceWidgetHelper.loadWidgetDarkTheme(this, mAppWidgetId);
-		mDarkTheme.setChecked(darkTheme);
+		mBinding.darkTheme.setChecked(darkTheme);
 	}
 
 	@Override
@@ -149,16 +136,18 @@ public class ConfigureActivity extends AppCompatActivity implements TextWatcher,
 
 	@Override
 	public void afterTextChanged(Editable editable) {
-		final boolean serialOk = mSerialNumber.getEditText().length() == 10;
-		final boolean fourOk = mFourDigits.getEditText().length() == 4;
-		mSerialNumber.setError(serialOk || mSerialNumber.getEditText().length() == 0 ? null : getString(R.string.enter_10_digits));
-		mFourDigits.setError(fourOk || mFourDigits.getEditText().length() == 0 ? null : getString(R.string.enter_4_digits));
-		mAddButton.setEnabled(serialOk && fourOk);
+		final EditText editSerial = Objects.requireNonNull(mBinding.serialNumber.getEditText());
+		final EditText editFour = Objects.requireNonNull(mBinding.fourDigits.getEditText());
+		final boolean serialOk = editSerial.length() == 0 || editSerial.length() == 10;
+		final boolean fourOk = editFour.length() == 0 || editFour.length() == 4;
+		mBinding.serialNumber.setError(serialOk ? null : getString(R.string.enter_10_digits));
+		mBinding.fourDigits.setError(fourOk ? null : getString(R.string.enter_4_digits));
+		mBinding.addButton.setEnabled(serialOk && fourOk);
 		if (serialOk && !fourOk) {
-			mFourDigits.requestFocus();
+			mBinding.fourDigits.requestFocus();
 		}
 		if (fourOk && !serialOk) {
-			mSerialNumber.requestFocus();
+			mBinding.serialNumber.requestFocus();
 		}
 	}
 
@@ -172,7 +161,7 @@ public class ConfigureActivity extends AppCompatActivity implements TextWatcher,
 			final int hours = minutes / 60;
 			text = getResources().getQuantityString(R.plurals.update_hours, hours, hours);
 		}
-		mDurationText.setText(text);
+		mBinding.durationText.setText(text);
 	}
 
 	@Override
