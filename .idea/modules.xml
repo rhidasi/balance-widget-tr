@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/balance-tr.iml" filepath="$PROJECT_DIR$/balance-tr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="balance-tr/app" />
+      <module fileurl="file://$PROJECT_DIR$/balance-tr.iml" filepath="$PROJECT_DIR$/balance-tr.iml" group="balance-tr" />
     </modules>
   </component>
 </project>
