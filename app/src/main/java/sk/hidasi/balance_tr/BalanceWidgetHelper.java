@@ -33,20 +33,14 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 /**
  * Helper methods for the {@link BalanceWidget BalanceWidget} AppWidget and the {@link ConfigureActivity} Activity.
@@ -54,7 +48,6 @@ import okhttp3.ResponseBody;
 class BalanceWidgetHelper {
 
 	private static final String TAG = BalanceWidgetHelper.class.getSimpleName();
-	private static final int ON_FAILURE_RETRY_MINUTES = 5;
 
 	private static final String PREFS_NAME = "sk.hidasi.balance_tr.BalanceWidget";
 	private static final String PREF_PREFIX_TEXT = "appwidget_text_";
@@ -64,16 +57,22 @@ class BalanceWidgetHelper {
 	private static final String PREF_PREFIX_DARK_THEME = "appwidget_dark_theme_";
 	private static final String PREF_PREFIX_UPDATE_FAILED = "appwidget_update_failed_";
 	private static final String PREF_PREFIX_MILLIS = "appwidget_millis_";
+	private static final String PREF_PREFIX_LAST_UPDATE_SUCCESS = "appwidget_last_update_success_";
 
 	private static final String WIDGET_ID = "widget_id";
 	private static final String CHANNEL_ID = "widget_channel";
-	private static NotificationChannel mNotificationChannel;
 
-	public static void createHttpRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId, final boolean fromUser) {
+	private static final String CANCEL_TAG = "CancelTag";
+
+	private static NotificationChannel mNotificationChannel;
+	private static RequestQueue mRequestQueue;
+	private static long mFailureRetrySeconds;
+
+	static void createHttpRequest(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId, final boolean fromUser) {
 
 		final String serial = loadWidgetSerial(context, appWidgetId);
 		final String fourDigits = loadWidgetFourDigits(context, appWidgetId);
-		final long updateInMinutes = loadWidgetUpdateMinutes(context, appWidgetId);
+		final long updateInSeconds = 60 * loadWidgetUpdateMinutes(context, appWidgetId);
 
 		if (serial == null || serial.length() != 10 || fourDigits == null || fourDigits.length() != 4) {
 			Log.e(TAG, "Invalid serial number or four digits");
@@ -81,17 +80,17 @@ class BalanceWidgetHelper {
 		}
 
 		if (BuildConfig.DEBUG) {
-			// detect "screenshot mode"
+			// special case for making screenshots
 			if (serial.equals("1234567890") && fourDigits.equals("1234")) {
 				saveWidgetText(context, appWidgetId, "12,30€");
-				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, 60);
+				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, 1000);
 				return;
 			}
 		}
 
 		if (!testNetwork(context)) {
 			// no network connection, just schedule next update
-			BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInMinutes);
+			BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInSeconds);
 			if (fromUser) {
 				// notify user about the reason we will not update the widget
 				if (!isIgnoringBatteryOptimizations(context)) {
@@ -99,73 +98,70 @@ class BalanceWidgetHelper {
 				} else {
 					Toast.makeText(context, R.string.no_connection, Toast.LENGTH_SHORT).show();
 				}
+			} else if (loadWidgetLastUpdateSuccess(context, appWidgetId) == 0) {
+				Toast.makeText(context, R.string.no_connection, Toast.LENGTH_SHORT).show();
 			}
 			return;
 		}
 
-		final HttpUrl url = new HttpUrl.Builder()
-				.scheme("https")
-				.host("www.trkarta.sk")
-				.addPathSegment("balance")
-				.addQueryParameter("card_serial", serial)
-				.addQueryParameter("pan_4_digits", fourDigits)
-				.build();
-		final Request request = new Request.Builder()
-				.url(url)
-				.build();
+		if (mRequestQueue != null) {
+			mRequestQueue.cancelAll(CANCEL_TAG);
+		}
 
-		final OkHttpClient client = new OkHttpClient.Builder()
-				.connectTimeout(10, TimeUnit.SECONDS)
-				.readTimeout(10, TimeUnit.SECONDS)
-				.retryOnConnectionFailure(false)
-				.build();
-
+		mRequestQueue = Volley.newRequestQueue(context);
+		final String url = String.format("https://www.trkarta.sk/balance?card_serial=%1$s&pan_4_digits=%2$s", serial, fourDigits);
 		final String oldText = loadWidgetText(context, appWidgetId);
+
+		final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+				response -> {
+					if (response == null) {
+						Log.d(TAG, "Request response = null");
+						saveWidgetText(context, appWidgetId, oldText);
+						saveWidgetUpdateFailed(context, appWidgetId, true);
+						BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, getNextRetrySeconds(updateInSeconds));
+					} else {
+						Log.d(TAG, "Request response = " + response);
+						try {
+							final boolean resultOk = response.getBoolean("result");
+							String text;
+							if (resultOk) {
+								text = response.getString("balance") + "€";
+							} else {
+								text = context.getString(R.string.widget_text_error);
+								showErrorNotification(context, appWidgetId);
+							}
+							saveWidgetText(context, appWidgetId, text);
+							saveLastUpdateSuccess(context, appWidgetId, System.currentTimeMillis());
+							mFailureRetrySeconds = 0;
+							BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInSeconds);
+						} catch (JSONException e) {
+							Log.e(TAG, "JSONException: " + e.getMessage());
+						}
+					}
+				},
+				error -> {
+					Log.d(TAG, "Request failed");
+					saveWidgetText(context, appWidgetId, oldText);
+					saveWidgetUpdateFailed(context, appWidgetId, true);
+					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, getNextRetrySeconds(updateInSeconds));
+				});
+
 		final String text = context.getString(R.string.widget_text_loading);
 		saveWidgetText(context, appWidgetId, text);
 		saveWidgetUpdateFailed(context, appWidgetId, false);
 		BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, 0);
 
-		Log.d(TAG, "Sending request..." + request.toString());
-		client.newCall(request).enqueue(new Callback() {
-
-			@Override
-			public void onFailure(final Call call, IOException e) {
-				Log.d(TAG, "Request failed");
-				saveWidgetText(context, appWidgetId, oldText);
-				saveWidgetUpdateFailed(context, appWidgetId, true);
-				BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, ON_FAILURE_RETRY_MINUTES);
-			}
-
-			@Override
-			public void onResponse(Call call, final Response response) throws IOException {
-				final ResponseBody responseBody = response.body();
-				final String content = responseBody == null ? null : responseBody.string();
-				Log.d(TAG, "Request response = " + content);
-				try {
-					final JSONObject json = new JSONObject(content);
-					final boolean resultOk = json.getBoolean("result");
-					String text;
-					if (resultOk) {
-						text = json.getString("balance") + "€";
-					} else {
-						text = context.getString(R.string.widget_text_error);
-						showErrorNotification(context, appWidgetId);
-					}
-					saveWidgetText(context, appWidgetId, text);
-					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, updateInMinutes);
-				} catch (JSONException e) {
-					Log.d(TAG, "Parsing result failed");
-					saveWidgetText(context, appWidgetId, oldText);
-					saveWidgetUpdateFailed(context, appWidgetId, true);
-					BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, ON_FAILURE_RETRY_MINUTES);
-				}
-			}
-		});
+		jsonRequest.setTag(CANCEL_TAG);
+		Log.d(TAG, "Sending request... " + url);
+		mRequestQueue.add(jsonRequest);
 	}
 
-	private static boolean isIgnoringBatteryOptimizations(final Context context)
-	{
+	private static long getNextRetrySeconds(final long maxUpdateInSeconds) {
+		mFailureRetrySeconds = Math.min(maxUpdateInSeconds, (mFailureRetrySeconds + 1) * 2);
+		return mFailureRetrySeconds;
+	}
+
+	private static boolean isIgnoringBatteryOptimizations(final Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 			return pm == null || !pm.isPowerSaveMode() || pm.isIgnoringBatteryOptimizations(context.getPackageName());
@@ -180,11 +176,25 @@ class BalanceWidgetHelper {
 			mNotificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
 			mNotificationChannel.setDescription(description);
 			final NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-			notificationManager.createNotificationChannel(mNotificationChannel);
+			if (notificationManager != null) {
+				notificationManager.createNotificationChannel(mNotificationChannel);
+			} else {
+				Log.e(TAG, "Could not get NotificationManager system service.");
+			}
 		}
 	}
 
 	private static void showErrorNotification(final Context context, int widgetId) {
+
+		final long lastSuccess =  loadWidgetLastUpdateSuccess(context, widgetId);
+		if (lastSuccess != 0) {
+			// the server returns spurious error responses sometimes
+			// suppress the error message for one hour
+			// another cause of the error response is an expired card
+			if (System.currentTimeMillis() - lastSuccess < 60 * 60 * 1000)
+				return;
+		}
+
 		createNotificationChannel(context);
 
 		Intent intent = new Intent(context, BalanceWidget.class);
@@ -208,21 +218,24 @@ class BalanceWidgetHelper {
 	}
 
 	static private boolean testNetwork(final Context context) {
-		final ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectivityManager != null) {
+			final NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+			return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+		} else {
+			Log.e(TAG, "Could not get ConnectivityManager system service.");
+			return false;
+		}
 	}
 
 	static boolean onOptionsItemSelected(final Activity activity, final MenuItem item) {
 		// Handle menu item selection
-		switch (item.getItemId()) {
-			case R.id.about:
-				Intent intent = new Intent(activity, AboutActivity.class);
-				activity.startActivity(intent);
-				return true;
-			default:
-				return activity.onOptionsItemSelected(item);
+		if (item.getItemId() == R.id.about) {
+			Intent intent = new Intent(activity, AboutActivity.class);
+			activity.startActivity(intent);
+			return true;
 		}
+		return activity.onOptionsItemSelected(item);
 	}
 
 	static String loadWidgetText(final Context context, int appWidgetId) {
@@ -250,7 +263,7 @@ class BalanceWidgetHelper {
 		return  prefs.getBoolean(PREF_PREFIX_DARK_THEME + appWidgetId, false);
 	}
 
-	static void saveWidgetText(final Context context, int appWidgetId, final String text) {
+	private static void saveWidgetText(final Context context, int appWidgetId, final String text) {
 		Log.d(TAG, "saveWidgetText(), appWidgetId=" + appWidgetId);
 		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
 		prefs.putString(PREF_PREFIX_TEXT + appWidgetId, text);
@@ -264,6 +277,7 @@ class BalanceWidgetHelper {
 		prefs.putString(PREF_PREFIX_FOUR_DIGITS + appWidgetId, fourDigits);
 		prefs.putInt(PREF_PREFIX_UPDATE_MINUTES + appWidgetId, updateMinutes);
 		prefs.putBoolean(PREF_PREFIX_DARK_THEME + appWidgetId, darkTheme);
+		prefs.remove(PREF_PREFIX_LAST_UPDATE_SUCCESS + appWidgetId);
 		prefs.apply();
 	}
 
@@ -276,6 +290,7 @@ class BalanceWidgetHelper {
 		prefs.remove(PREF_PREFIX_DARK_THEME + appWidgetId);
 		prefs.remove(PREF_PREFIX_UPDATE_FAILED + appWidgetId);
 		prefs.remove(PREF_PREFIX_MILLIS + appWidgetId);
+		prefs.remove(PREF_PREFIX_LAST_UPDATE_SUCCESS + appWidgetId);
 		prefs.apply();
 	}
 
@@ -284,7 +299,7 @@ class BalanceWidgetHelper {
 		return  prefs.getBoolean(PREF_PREFIX_UPDATE_FAILED + appWidgetId, false);
 	}
 
-	static void saveWidgetUpdateFailed(final Context context, int appWidgetId, final boolean failed) {
+	private static void saveWidgetUpdateFailed(final Context context, int appWidgetId, final boolean failed) {
 		Log.d(TAG, "saveWidgetUpdateFailed(), appWidgetId=" + appWidgetId);
 		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
 		prefs.putBoolean(PREF_PREFIX_UPDATE_FAILED + appWidgetId, failed);
@@ -300,6 +315,18 @@ class BalanceWidgetHelper {
 		Log.d(TAG, "saveWidgetClickMillis(), appWidgetId=" + appWidgetId);
 		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
 		prefs.putLong(PREF_PREFIX_MILLIS + appWidgetId, millis);
+		prefs.apply();
+	}
+
+	private static long loadWidgetLastUpdateSuccess(final Context context, int appWidgetId) {
+		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+		return  prefs.getLong(PREF_PREFIX_LAST_UPDATE_SUCCESS + appWidgetId, 0);
+	}
+
+	private static void saveLastUpdateSuccess(final Context context, int appWidgetId, final long millis) {
+		Log.d(TAG, "saveLastUpdateSuccess(), appWidgetId=" + appWidgetId);
+		final SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+		prefs.putLong(PREF_PREFIX_LAST_UPDATE_SUCCESS + appWidgetId, millis);
 		prefs.apply();
 	}
 }
