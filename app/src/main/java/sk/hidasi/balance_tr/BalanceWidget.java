@@ -92,7 +92,7 @@ public class BalanceWidget extends AppWidgetProvider {
 		if (nextUpdateInSeconds > 0) {
 			final AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			if (alarm != null) {
-				final long triggerTime = SystemClock.elapsedRealtime() + nextUpdateInSeconds * 60 * 1000;
+				final long triggerTime = SystemClock.elapsedRealtime() + nextUpdateInSeconds * 1000;
 				final PendingIntent refreshIntent = createPendingIntent(context, appWidgetId, ACTION_WIDGET_REFRESH);
 				alarm.cancel(refreshIntent);
 				alarm.set(AlarmManager.ELAPSED_REALTIME, triggerTime, refreshIntent);
