@@ -15,6 +15,7 @@
  */
 package sk.hidasi.balance_tr;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -33,8 +34,12 @@ import android.os.Handler;
 import android.os.SystemClock;
 import androidx.annotation.NonNull;
 
+import android.util.Config;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Implementation of App Widget functionality.
@@ -85,6 +90,19 @@ public class BalanceWidget extends AppWidgetProvider {
 			int xPos = (int) (0.54 * width);
 			int yPos = (int) (0.56 * height - (textPaint.descent() + textPaint.ascent()) / 2.);
 			canvas.drawText(widgetText, xPos, yPos, textPaint);
+
+			if (BuildConfig.DEBUG && !widgetText.equals(context.getString(R.string.widget_text_loading))) {
+				final long widgetUpdate = BalanceWidgetHelper.loadWidgetLastUpdateSuccess(context, appWidgetId);
+				if (widgetUpdate > 0) {
+					final Calendar calendar = Calendar.getInstance();
+					calendar.setTimeInMillis(widgetUpdate);
+					@SuppressLint("SimpleDateFormat")
+					final SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd.MM.yyyy");
+					final String date = formatter.format(calendar.getTime());
+					textPaint.setTextSize(height * 0.1f);
+					canvas.drawText(date, xPos, (int) (yPos + 0.3 * height), textPaint);
+				}
+			}
 		}
 
 		views.setImageViewBitmap(R.id.imageView, bmp);

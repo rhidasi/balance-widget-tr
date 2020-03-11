@@ -319,7 +319,7 @@ class BalanceWidgetHelper {
 		prefs.apply();
 	}
 
-	private static long loadWidgetLastUpdateSuccess(final Context context, int appWidgetId) {
+	static long loadWidgetLastUpdateSuccess(final Context context, int appWidgetId) {
 		final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
 		return  prefs.getLong(PREF_PREFIX_LAST_UPDATE_SUCCESS + appWidgetId, 0);
 	}
