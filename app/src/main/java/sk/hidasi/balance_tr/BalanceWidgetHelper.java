@@ -152,6 +152,7 @@ class BalanceWidgetHelper {
 		BalanceWidget.updateAppWidget(context, appWidgetManager, appWidgetId, 0);
 
 		jsonRequest.setTag(CANCEL_TAG);
+		jsonRequest.setShouldCache(false);
 		Log.d(TAG, "Sending request... " + url);
 		mRequestQueue.add(jsonRequest);
 	}

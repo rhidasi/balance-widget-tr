@@ -143,10 +143,10 @@ public class ConfigureActivity extends AppCompatActivity implements TextWatcher,
 		mBinding.serialNumber.setError(serialOk ? null : getString(R.string.enter_10_digits));
 		mBinding.fourDigits.setError(fourOk ? null : getString(R.string.enter_4_digits));
 		mBinding.addButton.setEnabled(serialOk && fourOk);
-		if (serialOk && !fourOk) {
+		if (serialOk && editFour.length() == 0) {
 			mBinding.fourDigits.requestFocus();
 		}
-		if (fourOk && !serialOk) {
+		if (fourOk && editSerial.length() == 0) {
 			mBinding.serialNumber.requestFocus();
 		}
 	}
